@@ -6,11 +6,14 @@
 # Cualquier otro código, propio o inyectado, se bloquea.
 # Si se reemplaza index.html por otra versión, hay que usar el _headers que
 # la acompaña: las huellas cambian con la lógica.
+#
+# frame-ancestors *: el documento se puede embeber en cualquier sitio.
+# Para limitarlo a sitios concretos, reemplazar el * por sus direcciones,
+# separadas por un espacio (p. ej. https://*.gamonal.app).
 
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'sha256-dcRCuW5QMfNpKMojEaklFGCSXo/+2ITnwb5CpYcVDdw='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'sha256-dcRCuW5QMfNpKMojEaklFGCSXo/+2ITnwb5CpYcVDdw='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors *
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
   Strict-Transport-Security: max-age=31536000
