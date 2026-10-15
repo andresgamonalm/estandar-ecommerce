@@ -1,0 +1,1488 @@
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafaf9}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Estándar de cotizador ecommerce</title><style id="estilo">
+  /* ═══════════════════════════════════════════════════════════════════
+     ESTÁNDAR DEL COTIZADOR · HOJA DE ESTILO
+     El documento se ve como hojas A4, una tras otra, igual en pantalla
+     que impreso: cada hoja de la pantalla es una página del papel.
+     Cada capítulo parte en una hoja nueva. Todo se dibuja desde los
+     datos: al mover, agregar o borrar algo, las hojas y los números de
+     página del índice se rehacen solos.
+
+     Tipografía Arial: el documento se abre en cualquier equipo, sin
+     internet y sin la fuente corporativa instalada.
+     ═══════════════════════════════════════════════════════════════════ */
+  :root {
+    color-scheme: light;
+
+    /* ── Paleta de marca ──────────────────────────────────────────── */
+    --azul:      #2167AE;   /* Azul de Zúrich, color héroe: franja, filetes, botones */
+    --azul-osc:  #23366F;   /* Azul oscuro: el único azul de todo el texto */
+    --paloma:    #DDE4E3;   /* Paloma: fondo gris de las sugerencias y recuadros */
+    --papel:     #FFFFFF;   /* Fondo de cada hoja */
+    --fondo:     #ECEEEF;   /* Gris de pantalla alrededor de las hojas; no se imprime */
+    --tinta:     #23366F;   /* Color del texto */
+    --tinta-2:   #5A6676;   /* Gris de notas, descripciones y pie */
+    --linea:     #D3DADF;   /* Filetes finos de separación */
+    --borrar:    #8C4A42;   /* Botón «quitar» al pasar el cursor */
+
+    /* ── Destacados por sección (colores de Zurich) ────────────────────
+       Cada sección tiene un color que marca su banda, el número de sus
+       capítulos y su entrada en los índices. El texto encima es blanco
+       sobre los azules y casi negro sobre los claros; así no hay azul
+       sobre verde. */
+    --acento-etapa-1: #2167AE;   /* Azul de Zurich · Proyecto · texto blanco 5,8 : 1 */
+    --acento-etapa-2: #23366F;   /* Azul oscuro · Experiencia · texto blanco 11,5 : 1 */
+    --acento-etapa-3: #A6E9AB;   /* Menta · Ejecución · texto casi negro 13,4 : 1 */
+    --acento-etapa-4: #FF7569;   /* Durazno · Medición · texto casi negro 7,2 : 1 */
+    --acento-etapa-5: #FFF773;   /* Amarillo · Software adicionales · texto casi negro 16,9 : 1 */
+    --texto-sobre-azul: #FFFFFF;   /* texto sobre los destacados azules */
+    --texto-sobre-claro: #111111;  /* texto sobre los destacados claros */
+
+    /* ── Escala de letra: todos los tamaños salen de aquí ─────────── */
+    --letra-11px: 11px;   /* meta de portada y pie de cada hoja */
+    --letra-12px: 12px;   /* rótulos, notas de cada punto, avisos, «volver» */
+    --letra-13px: 13px;   /* índices, ayuda, botones, descripción de etapa */
+    --letra-14px: 14px;   /* puntos y párrafos */
+    --letra-16px: 16px;   /* entrada de portada y título de cada capítulo */
+    --letra-20px: 20px;   /* título de cada etapa y del cierre */
+    --letra-28px: 28px;   /* título de portada en teléfono */
+    --letra-40px: 40px;   /* título de portada en la hoja */
+
+    /* ── Interlineado ─────────────────────────────────────────────── */
+    --interlineado-1-2: 1.2;     /* títulos */
+    --interlineado-1-35: 1.35;   /* índices y rótulos */
+    --interlineado-1-5: 1.5;     /* texto corrido */
+
+    /* ── Medidas de la hoja (A4) ──────────────────────────────────── */
+    --hoja-ancho: 210mm;       /* ancho de la hoja */
+    --hoja-alto: 297mm;        /* alto de la hoja */
+    --franja-alto: 14mm;       /* franja azul de arriba */
+    --pie-alto: 12mm;          /* pie con «volver», texto y número */
+    --margen-lateral: 16mm;    /* margen izquierdo y derecho del texto */
+
+    --letra: Arial, Helvetica, sans-serif;
+  }
+
+  body {
+    margin: 0; background: var(--fondo); color: var(--tinta);
+    font-family: var(--letra); font-size: var(--letra-14px); line-height: var(--interlineado-1-5);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Envoltura de toda la pantalla: barra, índice lateral y hojas. */
+  .hoja { hyphens: auto; -webkit-hyphens: auto; max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 0 64px; }
+
+  /* ── Barra de herramientas (fija arriba, no se imprime) ─────────── */
+  .barra {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    background: var(--fondo); border-bottom: 2px solid var(--azul);
+    padding: 10px 0; margin-bottom: 22px;
+  }
+  .barra button {
+    font-family: var(--letra); font-size: var(--letra-13px); font-weight: bold;
+    border: 1px solid var(--azul); background: var(--papel); color: var(--azul);
+    border-radius: 2px; padding: 8px 14px; cursor: pointer;
+  }
+  .barra button:hover { background: var(--azul); color: #FFFFFF; }
+  .barra button:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  .barra button[aria-pressed="true"] { background: var(--azul); color: #FFFFFF; }
+  .barra button.principal { background: var(--azul); color: #FFFFFF; }
+  .barra button.principal:hover { background: var(--azul-osc); border-color: var(--azul-osc); }
+  .barra__aviso { font-size: var(--letra-12px); color: var(--tinta-2); margin-left: auto; }
+  .barra__aviso[data-mal="1"] { color: var(--borrar); font-weight: bold; }
+  .barra button[aria-expanded="true"] { background: var(--azul); color: #FFFFFF; }
+
+  /* Buscar y reemplazar: fila completa bajo los botones (modo edición). */
+  .reemplazo { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding-top: 4px; }
+  .reemplazo[hidden] { display: none; }
+  /* Con el panel abierto la barra crece: el índice lateral baja con ella. */
+  .hoja:has(.reemplazo:not([hidden])) .lateral { top: 128px; }
+  .reemplazo label { display: flex; gap: 6px; align-items: center; font-size: var(--letra-13px); font-weight: bold; color: var(--azul-osc); }
+  .reemplazo input {
+    font-family: var(--letra); font-size: var(--letra-13px); color: var(--tinta);
+    border: 1px solid var(--linea); border-radius: 2px; padding: 7px 9px; width: 220px; background: var(--papel);
+  }
+  .reemplazo input:focus { outline: 2px solid var(--azul); outline-offset: 1px; }
+  .reemplazo__cuenta { font-size: var(--letra-12px); color: var(--tinta-2); min-width: 110px; }
+
+  /* ── Ayuda de uso (solo pantalla) ───────────────────────────────── */
+  .ayuda {
+    width: var(--hoja-ancho); box-sizing: border-box;
+    background: var(--papel); border-top: 2px solid var(--azul); border-radius: 2px;
+    padding: 12px 15px; font-size: var(--letra-13px); line-height: var(--interlineado-1-5);
+  }
+  .ayuda ol { margin: 7px 0 0; padding-left: 19px; }
+  .ayuda li { margin-bottom: 3px; text-align: justify; }
+
+  /* ── Marco: índice lateral a la izquierda y hojas a la derecha ─────
+     El índice lateral aparece solo en pantallas anchas y altas, donde
+     cabe entero sin barra de desplazamiento propia. */
+  .marco { display: block; }
+  .lateral { display: none; }
+  .hojas { display: flex; flex-direction: column; align-items: center; gap: 24px; min-width: 0; }
+  @media screen and (min-width: 1180px) and (min-height: 700px) {
+    .marco { display: grid; grid-template-columns: 270px var(--hoja-ancho); column-gap: 44px; justify-content: center; align-items: start; }
+    .lateral { display: block; position: sticky; top: 76px; }   /* justo bajo la barra fija */
+  }
+  .lateral__titulo {
+    display: block; font-size: var(--letra-13px); font-weight: bold; color: var(--azul-osc); text-decoration: none;
+    margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--azul);
+  }
+  .lateral__etapa { margin-bottom: 6px; }
+  /* Cabeza de cada etapa, con el color de su etapa de fondo. */
+  .lateral__cabeza {
+    display: block; text-decoration: none; background: var(--acento); color: var(--acento-texto);
+    border-radius: 2px; padding: 6px 10px; font-size: var(--letra-13px); font-weight: bold;
+    line-height: var(--interlineado-1-35);
+  }
+  .lateral__cierre { background: var(--paloma); margin-top: 4px; }
+  .lateral a:hover .tx { text-decoration: underline; }
+  .lateral a:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  .lateral [aria-current="true"] .tx { text-decoration: underline; }
+  /* Solo se despliega la lista de la etapa que se está leyendo. */
+  .lateral__lista { display: none; padding: 6px 0 6px 4px; }
+  .lateral__etapa.abierta .lateral__lista { display: block; }
+  .lateral__lista a {
+    display: flex; gap: 8px; padding: 2px 0 2px 10px;
+    font-size: var(--letra-13px); line-height: var(--interlineado-1-35);
+    color: var(--tinta); text-decoration: none; border-left: 2px solid var(--linea);
+  }
+  .lateral__lista a b { min-width: 2.6em; flex: none; }
+  /* El capítulo que se está leyendo: filete azul y negrita. */
+  .lateral__lista a[aria-current="true"] { border-left-color: var(--azul); font-weight: bold; }
+  .lateral__lista a[aria-current="true"] .tx { text-decoration: none; }
+
+  /* Cada etapa toma su color de acento. */
+  .etapa--1 { --acento: var(--acento-etapa-1); --acento-texto: var(--texto-sobre-azul); }
+  .etapa--2 { --acento: var(--acento-etapa-2); --acento-texto: var(--texto-sobre-azul); }
+  .etapa--3 { --acento: var(--acento-etapa-3); --acento-texto: var(--texto-sobre-claro); }
+  .etapa--4 { --acento: var(--acento-etapa-4); --acento-texto: var(--texto-sobre-claro); }
+  .etapa--5 { --acento: var(--acento-etapa-5); --acento-texto: var(--texto-sobre-claro); }
+
+  /* ═══ LA HOJA ══════════════════════════════════════════════════════
+     Franja azul arriba, cuerpo al medio y pie abajo. El alto es fijo:
+     lo que no cabe pasa a una hoja de continuación, nunca se corta. */
+  .pagina {
+    width: var(--hoja-ancho); height: var(--hoja-alto); box-sizing: border-box;
+    background: var(--papel); display: flex; flex-direction: column; overflow: hidden;
+    scroll-margin-top: 76px;
+  }
+  .pagina__franja {
+    flex: none; height: var(--franja-alto); box-sizing: border-box;
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 var(--margen-lateral); background: var(--azul); color: #FFFFFF;
+  }
+  .franja__logo { height: 26px; flex: none; display: block; }
+  .franja__barra { width: 1px; height: 22px; background: #FFFFFF; flex: none; }
+  .franja__area { font-size: var(--letra-13px); }
+  .franja__firma { margin-left: auto; font-size: var(--letra-12px); }
+  .franja__firma a { color: #FFFFFF; text-decoration: none; }   /* enlazada al correo, sin subrayado */
+
+  .pagina__cuerpo { flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 9mm var(--margen-lateral) 1mm; }   /* 1 mm libre sobre el pie */
+
+  .pagina__pie { flex: none; height: var(--pie-alto); box-sizing: border-box; padding: 0 var(--margen-lateral); }
+  .pagina__pie > div {
+    height: 100%; border-top: 1px solid var(--linea);
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
+    font-size: var(--letra-11px); color: var(--tinta-2);
+  }
+  .pie__der { text-align: right; font-variant-numeric: tabular-nums; }
+  /* «Volver al índice»: enlace al pie de cada capítulo; funciona también en el PDF. */
+  .volver { font-size: var(--letra-12px); font-weight: bold; color: var(--azul-osc); text-decoration: none; }
+  .volver:hover .tx { text-decoration: underline; }
+
+  /* ── Portada ────────────────────────────────────────────────────── */
+  .cabecera { padding-top: 26mm; }
+  .ojo { font-size: var(--letra-12px); font-weight: bold; color: var(--azul-osc); text-transform: uppercase; margin: 0 0 10px; }
+  h1 {
+    font-family: var(--letra); font-weight: bold; font-size: var(--letra-40px);
+    line-height: var(--interlineado-1-2); margin: 0 0 18px; color: var(--azul-osc); text-wrap: balance;
+  }
+  .regla { width: 118px; height: 3px; background: var(--azul); margin: 0 0 20px; }
+  .entrada { font-size: var(--letra-16px); line-height: var(--interlineado-1-5); margin: 0 0 22px; text-align: justify; }
+  .meta { font-size: var(--letra-11px); color: var(--tinta-2); line-height: var(--interlineado-1-5); margin: 0 0 16px; }
+  .leyenda { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: var(--letra-12px); margin: 0; }
+  .leyenda__muestra { background: var(--paloma); padding: 4px 9px; border-radius: 2px; font-weight: bold; }
+
+  /* ── Índice ─────────────────────────────────────────────────────── */
+  .indice h2 {
+    font-size: var(--letra-16px); font-weight: bold; color: var(--azul-osc); line-height: var(--interlineado-1-2);
+    margin: 0 0 10px; padding-bottom: 7px; border-bottom: 2px solid var(--azul);
+  }
+  .indice__etapa { margin-bottom: 7px; }   /* aire entre secciones del índice */
+  .indice__cabeza {
+    display: inline-block; background: var(--acento); color: var(--acento-texto); text-decoration: none;
+    font-size: var(--letra-13px); font-weight: bold; line-height: var(--interlineado-1-35);
+    padding: 4px 10px; border-radius: 2px; margin: 0 0 4px;
+  }
+  .indice__nota { font-size: var(--letra-13px); color: var(--tinta-2); margin: 0 0 3px; text-align: justify; }
+  /* Los capítulos de cada etapa van en una sola columna, en orden. */
+  .indice__lista { }
+  .indice__fila {
+    display: flex; gap: 9px; align-items: baseline; break-inside: avoid;
+    font-size: var(--letra-13px); line-height: var(--interlineado-1-35);
+    color: var(--tinta); text-decoration: none; padding: 1px 0; border-bottom: 1px solid var(--linea);   /* 1 px de relleno arriba y abajo */
+  }
+  .indice__fila b { min-width: 2.6em; flex: none; }
+  .indice__fila .tx { flex: 1 1 auto; min-width: 0; }
+  /* Número de la hoja donde empieza el capítulo. */
+  .indice__fila i { font-style: normal; flex: none; min-width: 2em; text-align: right; color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+  .indice__cierre { font-weight: bold; margin-top: 4px; }
+  .indice a:hover .tx { text-decoration: underline; }
+  .indice a:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  .continua { font-size: var(--letra-12px); font-weight: normal; color: var(--tinta-2); flex: none; }
+
+  /* ── Etapa y capítulo ───────────────────────────────────────────── */
+  .etapa__banda {
+    display: flex; align-items: baseline; gap: 4px 14px; flex-wrap: wrap;
+    background: var(--acento); color: var(--acento-texto);
+    padding: 12px 16px; border-radius: 2px; margin-bottom: 18px;
+  }
+  .etapa__n { font-size: var(--letra-12px); font-weight: bold; }
+  .etapa__banda h2 { font-family: var(--letra); font-weight: bold; font-size: var(--letra-20px); margin: 0; line-height: var(--interlineado-1-2); }
+  /* La descripción va en su propia línea, a todo el ancho de la banda. */
+  .etapa__banda p { margin: 0; font-size: var(--letra-13px); flex: 1 1 100%; min-width: 0; text-align: justify; }
+
+  .bloque { border-top: 2px solid var(--azul); padding-top: 10px; }   /* filete azul y 10 px hasta el título */
+  /* Capítulo que viene de la hoja anterior: la lista sigue, sin título. */
+  .bloque--sigue { border-top: 0; padding-top: 0; }
+  /* Capítulos seguidos dentro de la misma hoja: aire entre uno y otro. */
+  .bloque + .bloque { margin-top: 22px; }   /* separación entre capítulos */
+  .bloque h3 {
+    font-family: var(--letra); font-weight: bold; font-size: var(--letra-16px);
+    line-height: var(--interlineado-1-35); margin: 0 0 9px; padding-bottom: 7px;   /* 7 px hasta la línea fina y 9 px hasta el primer punto */
+    border-bottom: 1px solid var(--linea);
+    display: flex; gap: 10px; align-items: center; color: var(--azul-osc);
+  }
+  /* Número del capítulo, sobre el color de su etapa. */
+  .num {
+    flex: none; display: inline-flex; align-items: center; justify-content: center;
+    min-width: 38px; padding: 3px 7px; border-radius: 2px;
+    background: var(--acento); color: var(--acento-texto);
+    font-size: var(--letra-13px); font-weight: bold; line-height: var(--interlineado-1-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .bloque h3 > .tx { flex: 1 1 auto; min-width: 0; }
+
+  /* Los puntos van en una sola columna: se leen de arriba abajo, en orden. */
+  .bloque ul { list-style: none; margin: 0; padding: 0; }
+  .bloque li {
+    display: flex; gap: 10px; min-width: 0; margin: 0 0 6px;   /* 6 px de aire entre un punto y el siguiente */
+    font-size: var(--letra-14px); line-height: var(--interlineado-1-5); break-inside: avoid;
+  }
+  .bloque li:last-child { margin-bottom: 0; }   /* el último punto no suma aire: el filete del capítulo siguiente ya separa */
+  .bloque li > .cuerpo { min-width: 0; flex: 1 1 auto; }
+  .bloque li .tx { overflow-wrap: anywhere; text-align: justify; }
+  /* Viñeta: visto bueno en azul, dibujado con dos bordes girados. */
+  .bloque li::before {
+    content: ''; flex: none; box-sizing: content-box; width: 5px; height: 11px; margin: 2px 4px 0 3px;
+    border: solid var(--azul); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg);
+  }
+  .bloque li b { font-weight: bold; }
+  /* Enlace dentro de un punto: mismo color del texto, subrayado. */
+  .enlace { color: inherit; text-decoration: underline; }
+  .dato { display: block; font-size: var(--letra-12px); color: var(--tinta-2); margin-top: 3px; }
+  code { font-family: Consolas, 'Courier New', monospace; font-size: var(--letra-13px); color: var(--azul-osc); white-space: nowrap; }
+  /* Las notas con ejemplos van a la izquierda: justificadas, los
+     identificadores quedarían separados por huecos. */
+  .bloque li .dato { text-align: left; }
+
+  /* ── Sugerencias para otras áreas ──────────────────────────────────
+     Lo que corresponde a otra área va sobre gris Paloma, con el nombre
+     del área. Lo que define Ecommerce va sobre blanco. */
+  .sugiere { display: block; font-size: var(--letra-12px); line-height: var(--interlineado-1-35); color: var(--azul-osc); margin: 0 0 4px; }
+  .bloque li .sugiere .tx, .sugiere .tx { text-align: left; }
+  .sugiere__area { font-weight: bold; }
+  .sugiere--bloque { background: var(--paloma); padding: 8px 12px; border-radius: 2px; margin: 0 0 12px; }
+  .bloque li.li--sugerido { background: var(--paloma); padding: 9px 12px; border-radius: 2px; }
+  .bloque li.li--sugerido::before { display: none; }
+  .bloque--sugerido li::before { border-color: var(--tinta-2); }
+  /* En modo edición, el campo vacío se ve discreto, sin fondo. */
+  .sugiere--vacio { background: none; padding: 0; color: var(--tinta-2); margin: 4px 0 0; }
+  .sugiere--bloque.sugiere--vacio { margin: 0 0 10px; }
+  .sugiere--vacio .sugiere__area { margin-left: 4px; }
+
+  /* ── Cierre ─────────────────────────────────────────────────────── */
+  .cierre { border-top: 3px solid var(--azul); padding-top: 18px; }
+  .cierre h2 { font-family: var(--letra); font-weight: bold; font-size: var(--letra-20px); line-height: var(--interlineado-1-2); margin: 0 0 6px; color: var(--azul-osc); }
+  .cierre > p { margin: 0 0 18px; font-size: var(--letra-13px); color: var(--tinta-2); text-align: justify; }
+  .bifurcaciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  /* Tarjeta: contenido centrado en vertical, mismo aire arriba y abajo. */
+  .bif {
+    background: var(--paloma); border-radius: 2px; padding: 13px 15px; min-width: 0;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .bif b { display: flex; gap: 6px; font-weight: bold; font-size: var(--letra-14px); margin-bottom: 4px; color: var(--azul-osc); }
+  .bif b > .tx { flex: 1 1 auto; }
+  .bif .tx2 { font-size: var(--letra-13px); color: var(--tinta); overflow-wrap: anywhere; display: block; text-align: justify; }
+
+  /* ── Modo edición ───────────────────────────────────────────────────
+     Mientras se edita, la hoja crece con lo que se escribe para que
+     nada quede tapado; al terminar la edición se rearman las hojas. */
+  .en-edicion .pagina { height: auto; min-height: var(--hoja-alto); overflow: visible; }
+  .en-edicion .pagina__cuerpo { overflow: visible; }
+  [contenteditable="true"] { outline: 1px dashed var(--azul); outline-offset: 3px; border-radius: 2px; cursor: text; }
+  [contenteditable="true"]:focus { outline: 2px solid var(--azul); outline-offset: 3px; background: #F2F7FC; }
+  [contenteditable="true"]:empty::before { content: attr(data-pista); color: var(--tinta-2); font-weight: normal; }
+
+  .quitar {
+    flex: none; border: 0; background: none; cursor: pointer; padding: 0 3px;
+    color: var(--tinta-2); font-size: var(--letra-14px); line-height: 1; font-family: var(--letra);
+    align-self: flex-start; margin-top: 1px;
+  }
+  .quitar:hover { color: var(--borrar); }
+  .quitar:focus-visible { outline: 2px solid var(--borrar); outline-offset: 1px; }
+  .etapa__banda .quitar { color: var(--acento-texto); }
+  /* Flechas para subir o bajar un punto o un capítulo. */
+  .mover { display: inline-flex; gap: 3px; flex: none; align-self: flex-start; }
+  .mover button {
+    font-family: var(--letra); font-size: var(--letra-12px); line-height: 1; font-weight: bold;
+    border: 1px solid var(--linea); background: var(--papel); color: var(--azul-osc);
+    border-radius: 2px; padding: 3px 6px; cursor: pointer;
+  }
+  .mover button:hover:not(:disabled) { background: var(--azul); border-color: var(--azul); color: #FFFFFF; }
+  .mover button:focus-visible { outline: 2px solid var(--azul); outline-offset: 1px; }
+  .mover button:disabled { color: var(--linea); cursor: default; }
+  /* Agregar un punto justo debajo de otro (modo edición). */
+  .insertar {
+    flex: none; align-self: flex-start; cursor: pointer;
+    font-family: var(--letra); font-size: var(--letra-12px); font-weight: bold; line-height: 1;
+    border: 1px dashed var(--azul); background: var(--papel); color: var(--azul);
+    border-radius: 2px; padding: 3px 6px;
+  }
+  .insertar:hover { background: var(--azul); color: #FFFFFF; }
+  .insertar:focus-visible { outline: 2px solid var(--azul); outline-offset: 1px; }
+  .sumar {
+    font-family: var(--letra); font-size: var(--letra-12px); font-weight: bold;
+    border: 1px dashed var(--azul); background: none; color: var(--azul);
+    border-radius: 2px; padding: 6px 10px; cursor: pointer; margin-top: 10px; width: 100%;
+  }
+  .sumar:hover { background: var(--azul); color: #FFFFFF; }
+  .sumar:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+  .vacio { font-size: var(--letra-12px); color: var(--tinta-2); font-style: italic; margin: 0; }
+
+  /* ── Hoja de medición: invisible, sirve para saber qué cabe ─────── */
+  #medidor { position: absolute; left: -10000px; top: 0; visibility: hidden; pointer-events: none; }
+  #medidor .pagina { width: var(--hoja-ancho); height: var(--hoja-alto); }
+
+  /* ── Teléfono y pantallas angostas ─────────────────────────────────
+     Las hojas se ajustan al ancho y crecen con su contenido. La
+     paginación y los números del índice siguen siendo los del papel. */
+  @media screen and (max-width: 880px) {
+    .hoja { padding-inline: 10px; }
+    .hojas { align-items: stretch; }
+    .ayuda { width: auto; }
+    .hojas > .pagina { width: auto; height: auto; overflow: visible; scroll-margin-top: 120px; }   /* la barra ocupa dos filas */
+    .hojas > .pagina .pagina__cuerpo { overflow: visible; padding: 22px 18px 10px; }
+    .hojas > .pagina .pagina__franja { padding: 10px 18px; height: auto; flex-wrap: wrap; }
+    .hojas > .pagina .pagina__pie { padding: 0 18px; height: auto; }
+    .hojas > .pagina .pagina__pie > div { padding: 10px 0; grid-template-columns: 1fr auto; }
+    .hojas > .pagina .pie__centro { display: none; }
+    .hojas > .pagina .cabecera { padding-top: 8px; }
+    .hojas > .pagina h1 { font-size: var(--letra-28px); }
+    .hojas > .pagina .indice__lista { columns: 1; }
+    .hojas > .pagina .bifurcaciones { grid-template-columns: 1fr; }
+  }
+
+  /* ── Impresión ──────────────────────────────────────────────────────
+     Cada hoja es una página A4 sin márgenes extra: lo que se ve en
+     pantalla es lo que sale en papel. Los enlaces del índice y de
+     «Volver al índice» siguen funcionando al guardar como PDF. */
+  @page { size: A4; margin: 0; }
+  @media print {
+    html, body { background: #FFFFFF; margin: 0; padding: 0; }
+    .barra, .ayuda, .lateral, .sumar, .quitar, .mover, .insertar { display: none !important; }
+    /* La hoja de medición sigue activa (invisible) para que, si se rearman
+       las hojas al imprimir, se midan igual que en pantalla. */
+    .hoja { max-width: none; margin: 0; padding: 0; }
+    .marco { display: block; }
+    .hojas { display: block; }
+    .pagina { width: var(--hoja-ancho); height: var(--hoja-alto); break-after: page; page-break-after: always; }
+    .pagina:last-child { break-after: auto; page-break-after: auto; }
+    .pagina, .pagina * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    [contenteditable="true"] { outline: 0 !important; background: none !important; }
+  }
+
+  /* ── Versión publicada ─────────────────────────────────────────────
+     Sin índice lateral, hojas agrandadas al ancho disponible y botón
+     «Volver arriba». Solo se activa en la versión solo de lectura. */
+  .publicado .marco { display: block; }
+  .publicado .hoja { padding-top: 24px; }   /* sin barra: 24 px de aire sobre la primera hoja */
+  @media screen and (min-width: 881px) {
+    .publicado .hojas > .pagina {
+      zoom: var(--zoom-hojas, 1);                              /* agrandada hasta el ancho de la barra */
+      scroll-margin-top: calc(24px / var(--zoom-hojas, 1));    /* al saltar, la hoja queda a 24 px del borde superior */
+    }
+  }
+  .arriba {
+    position: fixed; right: 24px; bottom: 24px; z-index: 30;
+    font-family: var(--letra); font-size: var(--letra-13px); font-weight: bold;
+    background: var(--azul); color: #FFFFFF; border: 0; border-radius: 2px;
+    padding: 10px 16px; cursor: pointer;
+  }
+  .arriba:hover { background: var(--azul-osc); }
+  .arriba:focus-visible { outline: 2px solid var(--azul-osc); outline-offset: 2px; }
+  @media screen and (max-width: 880px) {
+    .publicado .hojas > .pagina { scroll-margin-top: 16px; }   /* teléfono: al saltar, la hoja queda a 16 px del borde */
+  }
+  @media print { .arriba { display: none !important; } }
+</style><div class="hoja"><div id="lienzo"></div></div><script type="application/json" id="datos-iniciales">{"titulo":"Estándar de un cotizador de producto ecommerce","cintillo":"Gerencia de Ecommerce","bajada":"Recomendaciones de la Gerencia de Ecommerce para la creación de activos digitales enfocados en la venta y cotización de un producto en línea, de forma autónoma o con apoyo de un ejecutivo, humano o virtual. Se organiza en cinco secciones: proyecto, experiencia, ejecución del activo digital, medición y software adicionales.","etapas":[{"titulo":"Proyecto","nota":"Lo que define el negocio antes de construir: producto, precio, recorrido, datos, compra y documentos.","bloques":[{"titulo":"Producto y modalidad de venta","puntos":[{"t":"**Radiografía del producto** · coberturas, deducibles, límites y sublímites, tal como figuran en el condicionado.","n":""},{"t":"Planes, vigencias, precios, plazos y modalidades de pago habilitadas.","n":""},{"t":"**Modalidad de comercialización** · autoservida, con asistencia virtual o con apoyo de un ejecutivo.","n":""},{"t":"Condiciones comerciales estándar.","n":""},{"t":"Vigencia de cada versión de plan: desde cuándo rige.","n":""}]},{"titulo":"Condiciones de aceptación del riesgo","puntos":[{"t":"Casuísticas que inciden en el precio, separadas de las que son declaración del riesgo.","n":""},{"t":"Criterios de aceptación, rechazo y derivación.","n":""},{"t":"Suma asegurada mínima y máxima por plan.","n":""},{"t":"Antigüedad máxima del bien asegurado.","n":""},{"t":"Zonas, usos y actividades excluidas.","n":""},{"t":"Endoso a institución financiera: cuándo procede y con qué datos.","n":""},{"t":"Cambios del cliente que llevan a recotizar.","n":""},{"t":"Vigencia de la cotización, en días.","n":""},{"t":"**Versión de las reglas aplicadas**, guardada en cada cotización.","n":""}]},{"titulo":"Composición del precio","puntos":[{"t":"**Componentes de la prima** · prima de riesgo, recargos, descuentos, gastos de administración y comisión de intermediación, por separado, para mostrar el desglose.","n":""},{"t":"Factores que inciden en el precio y tratamiento del impuesto al valor agregado.","n":"p. ej. zona, antigüedad, uso, materialidad, siniestralidad"},{"t":"Prima mínima por póliza.","n":""},{"t":"Recargo por pago en cuotas.","n":""},{"t":"Prorrateo y prima a corto plazo cuando la vigencia no es anual.","n":""},{"t":"**Redondeo** · de UF a pesos, cuántos decimales y en qué paso del cálculo.","n":""},{"t":"**Valor de la UF que se aplica** · el del día de la cotización o el del día de la emisión.","n":""},{"t":"Descuentos que se suman, descuentos que se excluyen y tope total.","n":""},{"t":"Tratamiento de un cambio de tarifa entre la cotización y la emisión.","n":""},{"t":"**Monto cotizado, monto de la propuesta y monto cobrado, iguales.**","n":""}]},{"titulo":"Promociones y oferta","puntos":[{"t":"Promoción asignada por campaña al cliente, no al plan.","n":""},{"t":"Beneficio de bienvenida y momento en que aparece.","n":""},{"t":"Código de campaña o cupón canjeable dentro del recorrido.","n":""},{"t":"Venta cruzada entre productos, con sus reglas.","n":""},{"t":"Oferta diferenciada por canal de origen.","n":""}]},{"titulo":"Recorrido y pantallas","puntos":[{"t":"Número de pasos declarado, igual al de las pantallas.","n":""},{"t":"**Detalle de cada pantalla** · qué pide, qué muestra y cuál es su botón principal.","n":""},{"t":"Precio visible desde que existe.","n":""},{"t":"Cada dato se pide una sola vez en todo el recorrido.","n":""},{"t":"**Cotización guardada en cada paso**, con plazo definido, para retomarla desde el mismo punto (carrito abandonado).","n":""},{"t":"Momento y forma en que entra la asistencia virtual o un ejecutivo.","n":""},{"t":"Contacto con una persona visible en cada paso.","n":""}]},{"titulo":"Datos que se piden, se consultan y se respaldan","puntos":[{"t":"**Datos de la persona** · RUT, nombre, apellido paterno, apellido materno, fecha de nacimiento, correo y celular.","n":""},{"t":"**Auto** · patente; con ella se completan marca, modelo y año. Además, uso del vehículo y comuna.","n":""},{"t":"**Hogar** · dirección, comuna, tipo de vivienda y monto asegurado.","n":""},{"t":"**Mascotas** · nombre, especie, raza, sexo y fecha de nacimiento de la mascota.","n":""},{"t":"Solo los campos que inciden en el precio o que pide la ley.","n":""},{"t":"**Datos que se completan solos** · con el RUT, los de quien ya es cliente; con la patente, los del vehículo.","n":""},{"t":"Revisión de cada dato: RUT con dígito verificador, correo con formato válido, celular de 9 dígitos y patente con formato chileno.","n":""},{"t":"Dirección y comuna normalizadas.","n":""},{"t":"Si el RUT no es de un cliente, los datos de la persona se piden en el formulario.","n":""},{"t":"Si la consulta no responde, los datos se piden a mano y la cotización continúa.","n":""},{"t":"Cada dato queda respaldado con su cotización, para su medición.","n":""}]},{"titulo":"Compra y emisión","puntos":[{"t":"**Resumen de la compra antes de pagar** · plan, coberturas, deducible, vigencia, cuota y total, en una sola pantalla.","n":""},{"t":"Compra completa sin crear cuenta ni contraseña.","n":""},{"t":"Medios de pago visibles antes de llegar al pago.","n":""},{"t":"**Pago rechazado** · causa en mensaje breve y nuevo intento sin perder datos.","n":""},{"t":"Emisión sujeta a la confirmación del pago.","n":""},{"t":"Pantalla final con número de póliza, próximos pasos y envío de la póliza notificación de autoinspección al correo (si aplica).","n":""},{"t":"Póliza y comprobante en PDF, con número de póliza, fecha de emisión.","n":""},{"t":"Reemisión del comprobante a pedido, en línea.","n":""},{"t":"Lectura de datos desde documentos para completar campos.","n":"póliza anterior, permiso de circulación o tasación"},{"t":"Documentos que se suben en PDF, JPG o PNG, hasta 5 MB.","n":""}]},{"titulo":"Pago","puntos":[{"t":"**Transbank Webpay Plus** para el pago único.","n":""},{"t":"**Webpay Oneclick o pago automático con tarjeta** para el cobro recurrente.","n":""},{"t":"Pago aprobado hacia la emisión y hacia Salesforce.","n":""},{"t":"Conciliación de pagos y reintento de cobro.","n":""}]},{"titulo":"Propuesta en PDF","puntos":[{"t":"**Campos sugeridos**, a validar con la propuesta actual.","n":""},{"t":"PDF de una o dos carillas, bajo 1 MB, con texto seleccionable.","n":""},{"t":"**Marca de agua «COTIZACIÓN · NO ES PÓLIZA»** hasta que exista emisión.","n":""},{"t":"Nombre del archivo sin datos personales.","n":"propuesta-seguro-auto-C0041827.pdf"},{"t":"Número de cotización y fecha.","n":""},{"t":"Hasta cuándo vale el precio.","n":""},{"t":"Contratante y bien asegurado.","n":""},{"t":"Plan, coberturas, límites y deducibles.","n":""},{"t":"Prima mensual y anual, con el desglose por componente.","n":""},{"t":"Promoción aplicada y su vigencia.","n":""},{"t":"Código de depósito del condicionado y de las cláusulas.","n":""},{"t":"Canal de contacto y enlace o código QR para retomar la cotización.","n":""}]},{"titulo":"Textos de pantalla y legales","puntos":[{"t":"Origen de cada texto de cobertura: ficha de producto y condicionado, con su código de depósito.","n":""},{"t":"Lenguaje promocional en pantalla y más formal en la póliza.","n":""},{"t":"Formato chileno: pesos sin decimales, UF con dos decimales y RUT con guion.","n":""},{"t":"Textos de error por campo y por servicio caído.","n":""},{"t":"Ubicación de las condiciones legales dentro del flujo.","n":""},{"t":"Páginas o espacios adicionales donde se publican estos textos.","n":""},{"t":"Versión de cada texto legal, con su fecha.","n":""}]},{"titulo":"Consentimientos y datos personales","puntos":[{"t":"**Aceptaciones del recorrido** · condiciones del seguro, tratamiento de datos personales y comunicaciones comerciales, cada una por separado.","n":""},{"t":"Paso del recorrido en que se pide cada aceptación.","n":""},{"t":"Casillas sin marcar de antemano.","n":""},{"t":"Registro de cada aceptación con fecha, hora y versión del texto aceptado.","n":""},{"t":"Acceso al condicionado y a las cláusulas antes de contratar.","n":""},{"t":"Uso de los datos de contacto para la recuperación de caídos, según la aceptación entregada.","n":""},{"t":"Baja de comunicaciones comerciales disponible en cada mensaje.","n":""}]}]},{"titulo":"Experiencia o expectativa","nota":"Lo que el cliente ve y vive en el cotizador; se revisa usando la pantalla.","bloques":[{"titulo":"Navegación sin interrupciones","puntos":[{"t":"**Sin ventanas emergentes ni pop-up** en todo el recorrido.","n":""},{"t":"Contratos y condicionado se leen dentro de la página, no en una pestaña nueva.","n":""},{"t":"**Cualquier PDF se genera y se descarga sin salir de la página.**","n":""},{"t":"Todo el recorrido en el mismo dominio, salvo la pasarela de pago.","n":""},{"t":"La pasarela de pago devuelve al paso exacto, con la cotización intacta.","n":""},{"t":"El botón atrás del navegador funciona y conserva lo ingresado.","n":""},{"t":"Lo escrito se conserva al recargar, al cerrar por accidente o al cambiar de aplicación en el teléfono.","n":""},{"t":"Sin captcha visible durante el recorrido.","n":""},{"t":"Sin ventanas de terceros incrustadas dentro del formulario.","n":""},{"t":"Sin chat flotante que tape el botón principal.","n":""},{"t":"Sin reproducción automática de video ni audio.","n":""},{"t":"El aviso de cookies no bloquea el primer paso.","n":""}]},{"titulo":"Formulario por cada pantalla","puntos":[{"t":"Un botón principal o llamado a la acción por pantalla.","n":""},{"t":"Indicador del paso actual y de los que faltan.","n":""},{"t":"Validación al salir de cada campo.","n":""},{"t":"Formato asistido al escribir: RUT, patente, teléfono y monto.","n":""},{"t":"Autocompletado del navegador en cada campo: RUT, patente y datos del prospecto.","n":""},{"t":"Datos traídos de Salesforce marcados como tales.","n":""},{"t":"Campos opcionales marcados.","n":""},{"t":"Mensaje de error junto al campo, no al final.","n":""},{"t":"Corrección de datos en la misma página, sin devolverse ni salir a un sitio externo.","n":""}]},{"titulo":"Precio en pantalla","puntos":[{"t":"Cuota mensual como cifra principal; total anual como secundaria.","n":""},{"t":"Precio de lista y precio con promoción, ambos visibles.","n":""},{"t":"Inclusiones y exclusiones junto al precio.","n":""},{"t":"Diferencias entre planes resumidas; tabla completa plegada.","n":""},{"t":"Recotización sin recargar la página al cambiar plan, deducible, vigencia o monto.","n":""},{"t":"Fecha hasta la que vale el precio.","n":""}]},{"titulo":"Escritorio","puntos":[{"t":"**Revisado en 1366×768 y en 1920×1080.**","n":""},{"t":"Espacio promocional lateral junto al formulario (paso 1), sin empujarlo.","n":""},{"t":"Formulario y resumen del precio lado a lado; el resumen acompaña al bajar por la página (a partir del paso 2).","n":""},{"t":"Contenido con ancho máximo, para que las líneas no se estiren en pantallas grandes.","n":""},{"t":"Probado en Chrome, Edge, Safari y Firefox, en sus versiones vigentes.","n":""}]},{"titulo":"Móvil","puntos":[{"t":"**Pensado primero para el teléfono**, en todo el sitio y no solo en el cotizador.","n":""},{"t":"Se adapta desde 320 px de ancho, sin desplazamiento horizontal.","n":""},{"t":"Teclado adecuado a cada tipo de campo.","n":""},{"t":"Campos con letra de 16 px o más, para que el teléfono no amplíe la pantalla al escribir.","n":""},{"t":"Áreas de toque de 44 × 44 px como mínimo.","n":""},{"t":"Botón principal al alcance del pulgar.","n":""},{"t":"Probado en Safari de iPhone y en Chrome de Android, en teléfonos reales.","n":""}]},{"titulo":"Accesibilidad","puntos":[{"t":"**Pautas de Accesibilidad para el Contenido Web 2.1** del World Wide Web Consortium, nivel AA.","n":""},{"t":"Recorrido completo operable con teclado.","n":""},{"t":"Cada campo con su etiqueta visible.","n":""},{"t":"Errores anunciados por el lector de pantalla.","n":""},{"t":"Operable con el texto ampliado al 200 %.","n":""},{"t":"El color no es el único portador de información.","n":""}]},{"titulo":"Recuperación de caídos","puntos":[{"t":"**Caído** · quien deja el recorrido tras dar sus datos de contacto, con su paso de salida.","n":""},{"t":"Enlace de retorno que abre la cotización intacta, en el mismo paso.","n":""},{"t":"**Secuencia de recuperación** por correo, WhatsApp y SMS: orden, tiempos y mensaje por paso.","n":""},{"t":"La secuencia se detiene cuando la persona compra.","n":""},{"t":"Límite de mensajes por persona.","n":""},{"t":"Posibilidad: derivación a un ejecutivo IA o remoto (humano), cuando la persona lo pide o cuando la recuperación digital no tiene respuesta.","n":""}]}]},{"titulo":"Ejecución del activo digital","nota":"Construcción, publicación y mantención del cotizador: diseño, espacios promocionales, contenidos, velocidad, archivos, pruebas y seguridad.","bloques":[{"titulo":"Sistema de diseño","puntos":[{"t":"Sistema global de diseño apegado a la directriz corporativa**.**","n":""},{"t":"Lineamiento aplicado desde el sistema, sin modificaciones pantalla por pantalla.","n":""},{"t":"Componentes compartidos entre productos y ramos, con todos sus estados: normal, foco, activo, deshabilitado, error, cargando y vacío.","n":""},{"t":"Biblioteca de componentes publicada, con ejemplos.","n":""},{"t":"Elementos construidos en HTML responsivo, bajo definiciones de marca, pero no como imágenes JPG, PNG o GIF.","n":""},{"t":"Tipografías e imágenes alojadas en el servidor de la compañía, sin incorporaciones propias o puntuales.","n":""},{"t":"**Cotizador liviano** · el área del formulario va sin fotografías, íconos ni elementos que agreguen peso a la carga; las piezas de campaña en HTML tienen su lugar en los espacios promocionales.","n":""},{"t":"Componentes de respaldo preparados para emergencias o incidencias.","n":""}]},{"titulo":"Espacios promocionales","puntos":[{"t":"**Espacios definidos en cada pantalla** · banner lateral del cotizador y banner superior.","n":""},{"t":"**Lateral del cotizador** · 300×600, o 300×250 como alternativa.","n":""},{"t":"**Superior, en escritorio** · 970×250 o 728×90.","n":""},{"t":"**Móvil** · 320×100 o 320×50; el lateral pasa a una franja superior.","n":""},{"t":"Armados en HTML, no como imagen plana.","n":""},{"t":"Imagen de apoyo bajo 150 KB, sin GIF animado ni video automático (optativo).","n":""},{"t":"Peso de cada espacio verificado al publicar.","n":""},{"t":"Versión de respaldo cuando la campaña no tiene pieza cargada.","n":""}]},{"titulo":"Administración de contenidos","puntos":[{"t":"Espacios promocionales, textos de oferta y vigencias administrados por la Gerencia de Ecommerce.","n":""},{"t":"Aprobación antes de publicar, con registro de quién publicó y cuándo.","n":""},{"t":"Vista previa en escritorio y en móvil.","n":""},{"t":"Programación de inicio y término por fecha y hora.","n":""},{"t":"Tiempo entre publicar y ver el cambio, declarado.","n":""},{"t":"Vuelta a la versión anterior en un paso.","n":""}]},{"titulo":"Velocidad del sitio","puntos":[{"t":"**Carga de cada página en 2,5 segundos como máximo**, en teléfono y en escritorio.","n":"umbral que Google califica como bueno para la carga del contenido principal"},{"t":"Ningún elemento se anima o se mueve de lugar mientras la página carga.","n":""},{"t":"Respuesta inmediata a cada clic.","n":""},{"t":"Consulta del precio en 1,5 segundos como máximo; pasado ese tiempo, la pantalla indica que está calculando.","n":""},{"t":"**Verificación con [Google PageSpeed Insights](https://pagespeed.web.dev/)** antes de publicar, para identificar brechas y aplicar mejoras.","n":""}]},{"titulo":"Documentos y forma de compartir","puntos":[{"t":"Documentos al cliente en PDF para envío.","n":""},{"t":"Despacho por correo y por WhatsApp de la propuesta, el condicionado y la información de planes.","n":""},{"t":"Opción de compartir la propuesta en línea por distintos canales.","n":""},{"t":"Fechas en archivos y nombres con el formato año-mes-día.","n":"2026-10-15"}]},{"titulo":"Pruebas y puesta en marcha","puntos":[{"t":"Revisión antes de cada publicación.","n":""},{"t":"Cotizaciones de referencia para verificar que el precio coincide con la tarifa.","n":""},{"t":"Modo demostración: cualquier pantalla abre con datos cargados.","n":""},{"t":"Alerta cuando caen las cotizaciones o las emisiones.","n":""},{"t":"Panel de operación con cotizaciones, emisiones y fallas por día.","n":""},{"t":"**Ambientes, pruebas técnicas y forma de publicar** · se acuerdan entre los equipos.","n":""}]},{"titulo":"Seguridad","revisa":"Tecnología y Seguridad de la información","puntos":[{"t":"Datos de los clientes protegidos al viajar y al guardarse.","n":""},{"t":"**Ningún dato personal en las direcciones web ni en los enlaces que se envían** · ni RUT, ni correo, ni teléfono.","n":""},{"t":"Datos de tarjeta solo en la pasarela de pago; el cotizador o sus plataformas de medición no los reciben ni guardan.","n":""},{"t":"Protección contra consultas masivas de RUT.","n":""}]}]},{"titulo":"Medición","nota":"Indicadores del recorrido, herramientas e identificación de cada elemento que se mide.","bloques":[{"titulo":"Indicadores del recorrido","puntos":[{"t":"**Entrada** · origen, campaña, dispositivo, cliente reconocido o nuevo.","n":""},{"t":"**Cada paso** · llegadas, completados, abandonos y tiempo.","n":""},{"t":"**RUT** · reconocido, no encontrado, corregido.","n":""},{"t":"**Campos** · errores, abandonos en blanco, correcciones repetidas.","n":""},{"t":"**Precio** · primer precio visto y su monto.","n":""},{"t":"**Decisiones** · plan, cambios de plan, deducible, vigencia y monto asegurado.","n":""},{"t":"**Promoción** · cuál se mostró, beneficio visto y cupón usado.","n":""},{"t":"**Comparación** · apertura de la tabla de coberturas.","n":""},{"t":"**Dudas** · clics en ayuda y contacto con una persona.","n":""},{"t":"**Propuesta** · descargada, enviada y reabierta.","n":""},{"t":"**Contratos** · abiertos, leídos y firmados.","n":""},{"t":"**Pago** · iniciado, aprobado, rechazado y causal.","n":""},{"t":"**Emisión** · póliza, prima, plan, deducible y vigencia.","n":""},{"t":"**Abandono y recuperación** · paso del abandono, caídos contactados, recuperados y ventas cerradas desde la recuperación.","n":""},{"t":"**Errores** · fallos de servicio, tiempos de espera y pantallas caídas.","n":""}]},{"titulo":"Herramientas de medición","puntos":[{"t":"**Google Tag Manager** · administra las etiquetas de medición del sitio.","n":""},{"t":"**Google Analytics 4** · recorrido, pasos, abandonos y compras.","n":""},{"t":"**Google AdWords **· publicidad, capturar de prospectos y generación de ventas.","n":""},{"t":"**Hotjar o Microsoft Clarity** · mapas de calor y grabación de sesiones.","n":""},{"t":"**Meta** (opcional) · uso de pixel para monitorear publicaciones promocionales.","n":""},{"t":"Conexiones o integración de plataformas corporativas: Salesforce, Power BI, Data Studio y Google Ads.","n":""},{"t":"Diccionario de eventos: nombre, momento en que se registra y datos que lleva.","n":""}]},{"titulo":"Direcciones web","puntos":[{"t":"**Una dirección propia por producto**, bajo el dominio corporativo o en un subdominio de venta digital.","n":""},{"t":"**Estructura** · dominio + tipo de página + ramo + producto + paso.","n":"ventadigital.zurich.com/cotizador/auto/auto-digital/datos-personales"},{"t":"Cada paso con su propia dirección.","n":""},{"t":"Minúsculas, sin tildes ni eñes, con guion medio entre palabras y sin otros símbolos.","n":""},{"t":"Segmento, ramo, categoría y producto con el mismo nombre en la dirección web, en Salesforce y en el sistema central de pólizas.","n":""},{"t":"Parámetros de campaña conservados de un paso al siguiente.","n":"utm_source, utm_medium, utm_campaign, gclid, fbclid"},{"t":"Al mover o renombrar una dirección, la anterior redirige de forma permanente a la nueva.","n":""},{"t":"La entrada de cada producto aparece en los buscadores; los pasos intermedios, no.","n":""},{"t":"Una dirección por producto como destino de anuncios, sin redirecciones.","n":""}]},{"titulo":"Identificación de elementos para medición","puntos":[{"t":"**Identificador escrito en cada elemento que se mide.**","n":""},{"t":"**Forma** · tipo + área + producto + paso + nombre, con guion medio.","n":""},{"t":"**pag** · llegada a una pantalla.","n":"pag-ecom-auto-digital-p3-planes"},{"t":"**btn** · clic en un botón.","n":"btn-ecom-auto-digital-p1-continuar"},{"t":"**opc** · elección de una opción.","n":"opc-ecom-auto-digital-p3-deducible"},{"t":"**txt** · escritura en un campo.","n":"txt-ecom-auto-digital-p2-patente"},{"t":"Producto con el mismo nombre que en la dirección web; paso con la letra p y su número.","n":"auto-digital · p1, p2, p3"},{"t":"**El identificador no cambia aunque cambie el texto del botón.**","n":""},{"t":"Identificador único en todo el sitio y el mismo en Google Analytics 4 y en Salesforce.","n":""},{"t":"Diccionario de identificadores definido antes de construir.","n":""}]}]},{"titulo":"Software adicionales","nota":"Salesforce es donde se lleva el control comercial del canal; las demás plataformas se conectan con él. Cada capítulo indica qué datos viajan en cada conexión.","bloques":[{"titulo":"Salesforce","puntos":[{"t":"**Cotización** · datos del cliente, producto, plan, precio y paso en que quedó.","n":""},{"t":"**Caídos** · persona que dejó el recorrido, paso de salida y estado de la recuperación.","n":""},{"t":"**Póliza emitida** · asociada a su cotización, con número, prima y vigencia.","n":""},{"t":"**Origen de cada cliente** · canal, campaña y anuncio que lo trajeron, con los parámetros de campaña y el identificador de clic de Google Ads y de Meta.","n":""},{"t":"**Venta asistida** · la cotización a la vista del ejecutivo o del asistente virtual.","n":""},{"t":"Si Salesforce no responde, la cotización sigue su curso y los datos se registran al volver la conexión.","n":""}]},{"titulo":"Salesforce y Power BI","puntos":[{"t":"**Cotizaciones, caídos, pólizas emitidas y ventas** por producto, canal y campaña, hacia los tableros generados.","n":""},{"t":"Actualización automática y diaria (sin envíos manual).","n":""},{"t":"Unión con los datos de Google Analytics 4, para ver el recorrido completo, de la visita a la póliza.","n":""}]},{"titulo":"Salesforce y Google Ads","puntos":[{"t":"**Conversiones desde el sitio** · cotización completada y póliza emitida.","n":""},{"t":"**Venta cerrada desde Salesforce** · asociada al clic de Google Ads que la originó, con el valor de la prima.","n":""},{"t":"Google Analytics 4 vinculado a Google Ads, con sus conversiones y audiencias.","n":""},{"t":"Clientes vigentes desde Salesforce, para excluirlos o para ofrecerles otro producto, según su aceptación.","n":""}]},{"titulo":"Salesforce con correo, WhatsApp y SMS","puntos":[{"t":"**Caídos desde Salesforce** hacia la secuencia de recuperación.","n":""},{"t":"Estado de cada envío de vuelta a Salesforce: enviado, entregado, leído, respondido y fallido.","n":""},{"t":"Baja de comunicaciones registrada en Salesforce y común a los tres canales.","n":""},{"t":"Número de WhatsApp de la empresa verificado por Meta, con plantillas aprobadas.","n":""},{"t":"SMS desde un número corto local.","n":""}]},{"titulo":"Data Studio","puntos":[{"t":"**Recorrido del cotizador** desde Google Analytics 4.","n":""},{"t":"**Inversión y resultados** desde Google Ads.","n":""},{"t":"Mismos nombres de producto y de campaña que en Salesforce y en Power BI.","n":""}]},{"titulo":"Tarificación y emisión","puntos":[{"t":"**Precio calculado por el sistema de tarificación de la compañía.**","n":""},{"t":"Respuesta desglosada por componente de prima.","n":""},{"t":"Versión de la tarifa registrada en cada cotización.","n":""},{"t":"Valor de la UF con su fecha de aplicación.","n":""},{"t":"Tiempo máximo de respuesta y mensaje en pantalla cuando se agota.","n":""},{"t":"Emisión en el sistema central de pólizas, con la póliza de vuelta a Salesforce.","n":""}]}]}],"cierre":{"titulo":"FIN","nota":"","bifurcaciones":[]},"firma":"By Andrés Gamonal","correo":"andres.gamonal@zurich.com","pie":"Estándar de un cotizador de producto ecommerce · Zurich Chile","logo":"data:image/png;base64,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","ojo":"Cotizador ecommerce · Estándar","meta":["Gerencia de Ecommerce · Zurich Chile","Versión 3.2 · Octubre de 2026"],"tituloIndice":"Contenido","rotuloEtapa":"Sección","rotuloPunto":"Sugerido para revisión de","rotuloBloque":"Temas sugeridos para revisión de","leyendaMuestra":"Sobre gris","leyendaTexto":"Temas sugeridos para revisión del área que se indica.","volver":"↑ Volver al índice"}</script><script id="logica">
+(() => {
+  'use strict';
+
+  /* ═══ 1 · LOS DATOS ════════════════════════════════════════════════
+     El documento entero vive acá. La pantalla se dibuja desde esto, no
+     al revés: al mover, agregar o borrar algo, la numeración, las hojas
+     y los números de página del índice se rehacen solos. */
+  let DOC = JSON.parse(document.getElementById('datos-iniciales').textContent);
+
+  /* Rótulos que se repiten en varias partes. Son editables; si el
+     archivo viene de una versión anterior, toman su texto de siempre. */
+  const ROTULOS = {
+    tituloIndice: 'Contenido',
+    rotuloEtapa: 'Etapa',
+    rotuloPunto: 'Sugerido para revisión de',
+    rotuloBloque: 'Temas sugeridos para revisión de',
+    leyendaMuestra: 'Sobre gris',
+    leyendaTexto: 'Temas sugeridos para revisión del área que se indica.',
+    volver: '↑ Volver al índice'
+  };
+  for (const k in ROTULOS) if (DOC[k] == null) DOC[k] = ROTULOS[k];
+
+  let edicion = false;
+  /* Versión publicada: si la barra no trae el botón «Editar», el documento
+     es solo de lectura y no se activa ninguna función de edición. */
+  const PUBLICADO = !document.getElementById('b-editar');
+  let anterior = null;
+  let pintandoEdicion = false;        // el modo con que se está armando el HTML
+  let PAGINAS = [], NUMS = null, UNIDADES = [];
+  const HOJA_INDICE = 2;              // la portada es la 1; el índice parte en la 2
+  const $ = s => document.querySelector(s);
+  const lienzo = $('#lienzo');
+  const aviso  = $('#aviso');
+
+  /* Hoja invisible donde se prueba qué cabe en cada página. No forma
+     parte del documento y no se guarda. */
+  const medidor = document.createElement('div');
+  medidor.id = 'medidor';
+  medidor.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(medidor);
+
+  /* ¿Está abierto dentro del visor, o es el archivo en el computador de
+     la persona? De eso depende cómo se guarda. */
+  const enVisor = typeof window.claude !== 'undefined' && typeof window.claude.use === 'function';
+
+  const decir = (txt, mal) => {
+    if (!aviso) return;            // la versión publicada no tiene barra ni avisos
+    aviso.textContent = txt;
+    if (mal) aviso.setAttribute('data-mal', '1'); else aviso.removeAttribute('data-mal');
+  };
+  const esc = t => String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  /* Una cifra no se separa de su unidad al cortar la línea («95 %»,
+     «2,5 segundos», «44 px»). Se aplica al mostrar, no a los datos. */
+  const fino = t => String(t)
+    .replace(/(\d) (%|×|px|KB|MB|segundos?|milisegundos|caracteres|días)/g, '$1\u00a0$2')
+    .replace(/× (\d)/g, '×\u00a0$1');
+  const rico = t => fino(esc(t))
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    /* Enlace: [texto](https://…) — abre en otra pestaña y funciona en el PDF. */
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a class="enlace" href="$2" target="_blank" rel="noopener">$1</a>');
+
+  /* ═══ 2 · PIEZAS DE CADA HOJA ══════════════════════════════════════ */
+  /* Cada sección tiene su color de destacado (cinco colores de Zurich). */
+  const colorEtapa = ie => `etapa--${(ie % 5) + 1}`;
+
+  /* Un texto editable. Todos los textos del documento pasan por acá:
+     en modo edición se pueden cambiar, y si el mismo texto aparece en
+     varias partes (un título en el índice y en su hoja), cambia en
+     todas mientras se escribe. */
+  function tx(campo, valor, o = {}) {
+    return `<span class="tx${o.clase ? ' ' + o.clase : ''}"`
+      + (o.ruta != null ? ` data-ruta="${o.ruta}"` : '')
+      + ` data-campo="${campo}"`
+      + (o.pista ? ` data-pista="${esc(o.pista)}"` : '')
+      + (o.rico ? ' data-rico="1"' : '')
+      + (pintandoEdicion ? ' contenteditable="true"' : '')
+      + `>${o.rico ? rico(valor) : fino(esc(valor))}</span>`;
+  }
+
+  const quitar = (tipo, ruta, que) => !pintandoEdicion ? '' :
+    `<button type="button" class="quitar" data-quitar="${tipo}" data-ruta="${ruta}" title="Quitar ${que}" aria-label="Quitar ${esc(que)}">&#10005;</button>`;
+
+  /* Capítulo anterior o siguiente, aunque esté en otra etapa. Sirve
+     para que las flechas pasen un punto de un capítulo al vecino. */
+  function capVecino(ie, ib, dir) {
+    let e = ie, b = ib + dir;
+    while (e >= 0 && e < DOC.etapas.length) {
+      const n = DOC.etapas[e].bloques.length;
+      if (b >= 0 && b < n) return [e, b];
+      e += dir;
+      if (e < 0 || e >= DOC.etapas.length) break;
+      b = dir < 0 ? DOC.etapas[e].bloques.length - 1 : 0;
+    }
+    return null;
+  }
+
+  /* Botón para agregar un punto justo debajo de otro. */
+  const insertar = ruta => !pintandoEdicion ? '' :
+    `<button type="button" class="insertar" data-insertar="${ruta}" title="Agregar un punto debajo" aria-label="Agregar un punto debajo">+</button>`;
+
+  /* Flechas para subir o bajar un punto o un capítulo. */
+  const mover = (tipo, ruta, primero, ultimo) => !pintandoEdicion ? '' :
+    `<span class="mover">`
+    + `<button type="button" data-mover="${tipo}" data-ruta="${ruta}" data-dir="-1"${primero ? ' disabled' : ''} title="Subir" aria-label="Subir">↑</button>`
+    + `<button type="button" data-mover="${tipo}" data-ruta="${ruta}" data-dir="1"${ultimo ? ' disabled' : ''} title="Bajar" aria-label="Bajar">↓</button>`
+    + `</span>`;
+
+  const sumar = (tipo, ruta, texto, clase) => !pintandoEdicion ? '' :
+    `<button type="button" class="sumar${clase ? ' ' + clase : ''}" data-sumar="${tipo}"${ruta != null ? ` data-ruta="${ruta}"` : ''}>${texto}</button>`;
+
+  /* Rótulo «Sugerido para revisión de …». Se muestra cuando el punto o
+     el capítulo tiene un área escrita; en modo edición aparece vacío
+     para poder escribirla. Borrar el área quita la marca. */
+  function rotulo(ruta, area, nivel) {
+    const campo = nivel === 'bloque' ? 'rotuloBloque' : 'rotuloPunto';
+    return `<span class="sugiere${nivel === 'bloque' ? ' sugiere--bloque' : ''}${area ? '' : ' sugiere--vacio'}">`
+      + tx(campo, DOC[campo], { clase: 'sugiere__rotulo' }) + ' '
+      + tx('revisa', area, { ruta, pista: 'área, opcional', clase: 'sugiere__area' })
+      + `</span>`;
+  }
+
+  /* Franja azul de cada hoja. La firma va solo en la portada. */
+  function franja(portada) {
+    return `<div class="pagina__franja">`
+      + (DOC.logo ? `<img class="franja__logo" src="${esc(DOC.logo)}" alt="Zurich">` : '')
+      + `<span class="franja__barra"></span>`
+      + tx('cintillo', DOC.cintillo, { clase: 'franja__area' })
+      + (portada ? `<span class="franja__firma"><a href="mailto:${esc(DOC.correo || '')}">${esc(DOC.firma || '')}</a></span>` : '')
+      + `</div>`;
+  }
+
+  /* Pie de cada hoja: «Volver al índice», el texto del pie y el número. */
+  function pie(num, conVolver) {
+    const volver = conVolver
+      ? `<a class="volver" href="#hoja-${HOJA_INDICE}" data-ir="hoja-${HOJA_INDICE}">${tx('volver', DOC.volver)}</a>` : '';
+    return `<div class="pagina__pie"><div>`
+      + `<span class="pie__izq">${volver}</span>`
+      + `<span class="pie__centro">${tx('pie', DOC.pie || '')}</span>`
+      + `<span class="pie__der">${num > 1 ? num : ''}</span>`
+      + `</div></div>`;
+  }
+
+  function banda(ie) {
+    const e = DOC.etapas[ie];
+    return `<div class="etapa__banda">`
+      + `<span class="etapa__n">${tx('rotuloEtapa', DOC.rotuloEtapa)} ${ie + 1}</span>`
+      + `<h2>${tx('titulo', e.titulo, { ruta: ie, pista: 'Nombre de la etapa' })}</h2>`
+      + `<p>${tx('nota', e.nota, { ruta: ie, pista: 'Descripción' })}</p>`
+      + mover('etapa', ie, ie === 0, ie === DOC.etapas.length - 1)
+      + quitar('etapa', ie, 'la etapa ' + e.titulo)
+      + `</div>`;
+  }
+
+  /* ═══ 3 · LAS HOJAS ════════════════════════════════════════════════ */
+  function hojaPortada() {
+    return `<section class="pagina pagina--portada" id="hoja-1" data-cap="portada">${franja(true)}`
+      + `<div class="pagina__cuerpo"><div class="cabecera">`
+      + `<p class="ojo">${tx('ojo', DOC.ojo || '')}</p>`
+      + `<h1>${tx('titulo', DOC.titulo)}</h1>`
+      + `<div class="regla"></div>`
+      + `<p class="entrada">${tx('bajada', DOC.bajada, { rico: true })}</p>`
+      + `<p class="meta">${(DOC.meta || []).map((l, k) => tx('meta.' + k, l)).join('<br>')}</p>`
+      + `<p class="leyenda"><span class="leyenda__muestra">${tx('leyendaMuestra', DOC.leyendaMuestra)}</span>`
+      + `${tx('leyendaTexto', DOC.leyendaTexto)}</p>`
+      + `</div></div>${pie(1, false)}</section>`;
+  }
+
+  /* Las piezas del índice, en orden: cada etapa, sus capítulos y el
+     cierre. Si no caben en una hoja, siguen en la siguiente. */
+  function unidadesIndice() {
+    const u = [];
+    DOC.etapas.forEach((e, ie) => {
+      u.push({ t: 'etapa', ie });
+      e.bloques.forEach((b, ib) => u.push({ t: 'cap', ie, ib }));
+    });
+    if (DOC.cierre) u.push({ t: 'cierre' });
+    return u;
+  }
+
+  function hojaIndice(unidades, primera, num, NUM) {
+    const h = [`<section class="pagina pagina--indice" id="hoja-${num}" data-cap="indice">${franja(false)}`];
+    h.push(`<div class="pagina__cuerpo"><nav class="indice"${primera ? ' id="indice"' : ''}>`);
+    h.push(`<h2>${tx('tituloIndice', DOC.tituloIndice)}${primera ? '' : ' <span class="continua">(continuación)</span>'}</h2>`);
+    let abierta = false;
+    const cerrar = () => { if (abierta) { h.push(`</div></div>`); abierta = false; } };
+    unidades.forEach(un => {
+      if (un.t === 'etapa') {
+        cerrar();
+        const e = DOC.etapas[un.ie], n = NUM.etapa[un.ie];
+        h.push(`<div class="indice__etapa ${colorEtapa(un.ie)}">`);
+        h.push(`<a class="indice__cabeza" href="#hoja-${n}" data-ir="hoja-${n}">`
+          + `${tx('rotuloEtapa', DOC.rotuloEtapa)} ${un.ie + 1} · ${tx('titulo', e.titulo, { ruta: un.ie })}</a>`);
+        h.push(`<div class="indice__lista">`);
+        abierta = true;
+      } else if (un.t === 'cap') {
+        if (!abierta) { h.push(`<div class="indice__etapa ${colorEtapa(un.ie)}"><div class="indice__lista">`); abierta = true; }
+        const n = NUM.cap[`${un.ie}.${un.ib}`];
+        h.push(`<a class="indice__fila" href="#hoja-${n}" data-ir="hoja-${n}"><b>${un.ie + 1}.${un.ib + 1}</b>`
+          + `${tx('titulo', DOC.etapas[un.ie].bloques[un.ib].titulo, { ruta: `${un.ie}.${un.ib}` })}<i>${n}</i></a>`);
+      } else {
+        cerrar();
+        h.push(`<a class="indice__fila indice__cierre" href="#hoja-${NUM.cierre}" data-ir="hoja-${NUM.cierre}">`
+          + `${tx('cierre.titulo', DOC.cierre.titulo)}<i>${NUM.cierre}</i></a>`);
+      }
+    });
+    cerrar();
+    if (!DOC.etapas.length) {
+      h.push(`<p class="vacio">El documento no tiene etapas. Usa «+ etapa» para empezar.</p>`);
+      h.push(sumar('etapa', null, '+ etapa'));
+    }
+    h.push(`</nav></div>${pie(num, false)}</section>`);
+    return h.join('');
+  }
+
+  /* Un capítulo, o la parte de él que cabe en esta hoja. Si viene de
+     la hoja anterior, repite su título con la marca de continuación. */
+  function segmento(ie, ib, desde, hasta) {
+    const e = DOC.etapas[ie], b = e.bloques[ib];
+    const rb = b.revisa || '', continua = desde > 0, termina = hasta >= b.puntos.length;
+    const h = [`<div class="bloque${rb ? ' bloque--sugerido' : ''}${continua ? ' bloque--sigue' : ''}"${continua ? '' : ` id="cap-${ie}-${ib}"`} data-seg="${ie}.${ib}">`];
+    /* Si el capítulo viene de la hoja anterior, la lista sigue sin título. */
+    if (!continua) {
+      h.push(`<h3><span class="num">${ie + 1}.${ib + 1}</span>`);
+      h.push(tx('titulo', b.titulo, { ruta: `${ie}.${ib}`, pista: 'Nombre del capítulo' }));
+      h.push(mover('bloque', `${ie}.${ib}`, ib === 0 && ie === 0,
+        ib === e.bloques.length - 1 && ie === DOC.etapas.length - 1) + quitar('bloque', `${ie}.${ib}`, 'el capítulo'));
+      h.push(`</h3>`);
+      if (rb || pintandoEdicion) h.push(rotulo(`${ie}.${ib}`, rb, 'bloque'));
+    }
+    h.push(`<ul>`);
+    if (!b.puntos.length) h.push(`<li><span class="vacio">Sin puntos.</span></li>`);
+    for (let ip = desde; ip < hasta; ip++) {
+      const p = b.puntos[ip], rp = p.revisa || '', ruta = `${ie}.${ib}.${ip}`;
+      h.push(`<li${rp ? ' class="li--sugerido"' : ''}><div class="cuerpo">`);
+      if (rp) h.push(rotulo(ruta, rp, 'punto'));
+      h.push(tx('t', p.t, { ruta, pista: 'Escribe el punto', rico: true }));
+      if (p.n || pintandoEdicion) h.push(tx('n', p.n, { ruta, pista: 'Nota al pie, opcional', clase: 'dato' }));
+      if (!rp && pintandoEdicion) h.push(rotulo(ruta, '', 'punto'));
+      const primeroDoc = ip === 0 && !capVecino(ie, ib, -1);
+      const ultimoDoc = ip === b.puntos.length - 1 && !capVecino(ie, ib, 1);
+      h.push(`</div>${insertar(ruta)}${mover('punto', ruta, primeroDoc, ultimoDoc)}${quitar('punto', ruta, 'este punto')}</li>`);
+    }
+    h.push(`</ul>`);
+    if (termina) h.push(sumar('punto', `${ie}.${ib}`, '+ punto'));
+    h.push(`</div>`);
+    return h.join('');
+  }
+
+  /* Hoja de una etapa. La etapa empieza siempre en hoja nueva; sus
+     capítulos van seguidos y, si no caben, continúan en la siguiente. */
+  function hojaCapitulo(pg, num) {
+    const { ie, segs, primeraDeEtapa, ultimaDeEtapa } = pg;
+    const e = DOC.etapas[ie];
+    const h = [`<section class="pagina ${colorEtapa(ie)}" id="hoja-${num}" data-cap="${ie}.${segs.length ? segs[0].ib : 'v'}">${franja(false)}`];
+    h.push(`<div class="pagina__cuerpo">`);
+    if (primeraDeEtapa) h.push(banda(ie));
+    segs.forEach(sg => h.push(segmento(ie, sg.ib, sg.desde, sg.hasta)));
+    if (ultimaDeEtapa) h.push(sumar('bloque', ie, `+ capítulo en «${esc(e.titulo)}»`));
+    if (ultimaDeEtapa && ie === DOC.etapas.length - 1) h.push(sumar('etapa', null, '+ etapa'));
+    h.push(`</div>${pie(num, true)}</section>`);
+    return h.join('');
+  }
+
+  /* Etapa que se quedó sin capítulos: su banda y el botón para agregar. */
+  function hojaEtapaVacia(pg, num) {
+    const ie = pg.ie;
+    return `<section class="pagina ${colorEtapa(ie)}" id="hoja-${num}" data-cap="${ie}.v">${franja(false)}`
+      + `<div class="pagina__cuerpo">${banda(ie)}<p class="vacio">Esta etapa no tiene capítulos.</p>`
+      + sumar('bloque', ie, `+ capítulo en «${esc(DOC.etapas[ie].titulo)}»`)
+      + (ie === DOC.etapas.length - 1 ? sumar('etapa', null, '+ etapa') : '')
+      + `</div>${pie(num, true)}</section>`;
+  }
+
+  function hojaCierre(num) {
+    const c = DOC.cierre;
+    const h = [`<section class="pagina" id="hoja-${num}" data-cap="cierre">${franja(false)}<div class="pagina__cuerpo">`];
+    h.push(`<div class="cierre" id="cierre">`);
+    h.push(`<h2>${tx('cierre.titulo', c.titulo)}</h2>`);
+    h.push(`<p>${tx('cierre.nota', c.nota)}</p>`);
+    h.push(`<div class="bifurcaciones">`);
+    c.bifurcaciones.forEach((f, i) => {
+      h.push(`<div class="bif"><b>${tx('titulo', f.titulo, { ruta: 'c.' + i, pista: 'Título' })}`
+        + `${mover('bif', i, i === 0, i === c.bifurcaciones.length - 1)}${quitar('bif', i, f.titulo)}</b>`
+        + `${tx('texto', f.texto, { ruta: 'c.' + i, pista: 'Descripción', clase: 'tx2' })}</div>`);
+    });
+    h.push(`</div>${sumar('bif', null, '+ decisión')}</div>`);
+    h.push(`</div>${pie(num, true)}</section>`);
+    return h.join('');
+  }
+
+  function hoja(p) {
+    if (p.tipo === 'portada')    return hojaPortada();
+    if (p.tipo === 'indice')     return hojaIndice(UNIDADES.slice(p.desde, p.hasta), p.primera, p.num, NUMS);
+    if (p.tipo === 'capitulo')   return hojaCapitulo(p, p.num);
+    if (p.tipo === 'etapaVacia') return hojaEtapaVacia(p, p.num);
+    if (p.tipo === 'cierre')     return hojaCierre(p.num);
+    return '';
+  }
+
+  /* ═══ 4 · PAGINAR ══════════════════════════════════════════════════
+     Se prueba cada hoja en la hoja invisible, con las medidas exactas
+     del papel. Si un capítulo no cabe, se busca cuántos puntos entran y
+     el resto pasa a una hoja de continuación. La paginación es siempre
+     la del papel, aunque se esté mirando en un teléfono: por eso los
+     números del índice coinciden con los de la impresión. */
+  function paginar() {
+    const modo = pintandoEdicion;
+    pintandoEdicion = false;          // se mide como se va a imprimir
+    const cabe = html => {
+      medidor.innerHTML = html;
+      const c = medidor.querySelector('.pagina__cuerpo');
+      return c.scrollHeight <= c.clientHeight + 1;
+    };
+    /* La mayor cantidad que cabe, entre 1 y el total. */
+    const cuantosCaben = (total, prueba) => {
+      if (total <= 0 || prueba(total)) return total;
+      let bajo = 1, alto = total - 1, mejor = 1;
+      while (bajo <= alto) {
+        const medio = (bajo + alto) >> 1;
+        if (prueba(medio)) { mejor = medio; bajo = medio + 1; } else alto = medio - 1;
+      }
+      return mejor;
+    };
+
+    /* 1. Hojas de cada etapa. Se van llenando con capítulos seguidos;
+       un capítulo que no cabe sigue en la hoja siguiente. Para que un
+       título no quede casi solo al pie, si de un capítulo caben menos de
+       dos puntos, el capítulo entero pasa a la hoja siguiente. */
+    const caps = [];
+    DOC.etapas.forEach((e, ie) => {
+      if (!e.bloques.length) { caps.push({ tipo: 'etapaVacia', ie }); return; }
+      let segs = [], primera = true;
+      const probar = lista => cabe(hojaCapitulo({ tipo: 'capitulo', ie, segs: lista, primeraDeEtapa: primera, ultimaDeEtapa: false }, 88));
+      const cerrarHoja = () => { caps.push({ tipo: 'capitulo', ie, segs, primeraDeEtapa: primera, ultimaDeEtapa: false }); segs = []; primera = false; };
+      e.bloques.forEach((b, ib) => {
+        const n = b.puntos.length;
+        let desde = 0;
+        while (true) {
+          const todo = { ib, desde, hasta: n };
+          if (probar([...segs, todo])) { segs.push(todo); break; }
+          const resto = n - desde;
+          let k = 0;
+          if (resto > 0 && probar([...segs, { ib, desde, hasta: desde + 1 }])) {
+            let bajo = 2, alto = resto - 1; k = 1;
+            while (bajo <= alto) {
+              const m = (bajo + alto) >> 1;
+              if (probar([...segs, { ib, desde, hasta: desde + m }])) { k = m; bajo = m + 1; } else alto = m - 1;
+            }
+          }
+          /* Tampoco quedan menos de dos puntos solos en la hoja siguiente:
+             se dejan dos para allá, o el capítulo corto pasa entero. */
+          if (k > 0 && resto - k < 2) {
+            if (resto >= 4) k = resto - 2;
+            else if (segs.length) k = 0;
+          }
+          /* Un capítulo que empieza al pie deja al menos dos líneas de texto
+             bajo su título: dos puntos, o un punto que ocupe dos líneas. */
+          const dosLineas = () => {
+            cabe(hojaCapitulo({ tipo: 'capitulo', ie, segs: [...segs, { ib, desde, hasta: desde + 1 }], primeraDeEtapa: primera, ultimaDeEtapa: false }, 88));
+            const li = medidor.querySelector(`.bloque[data-seg="${ie}.${ib}"] li`);
+            return !!li && li.getBoundingClientRect().height >= 1.8 * (parseFloat(getComputedStyle(li).lineHeight) || 21);
+          };
+          if (segs.length && k < Math.max(1, Math.min(2, resto)) && !(k === 1 && dosLineas())) { cerrarHoja(); continue; }
+          if (!segs.length && k === 0) { if (resto === 0) { segs.push(todo); break; } k = 1; }
+          segs.push({ ib, desde, hasta: desde + k });
+          desde += k;
+          cerrarHoja();
+        }
+      });
+      if (segs.length) cerrarHoja();
+      caps[caps.length - 1].ultimaDeEtapa = true;
+    });
+
+    /* 2. Hojas del índice (se miden con números de prueba) */
+    UNIDADES = unidadesIndice();
+    const prueba = { etapa: {}, cap: {}, cierre: 88 };
+    DOC.etapas.forEach((e, ie) => { prueba.etapa[ie] = 88; e.bloques.forEach((b, ib) => { prueba.cap[`${ie}.${ib}`] = 88; }); });
+    const indices = [];
+    let i0 = 0;
+    do {
+      let k = cuantosCaben(UNIDADES.length - i0,
+        k => cabe(hojaIndice(UNIDADES.slice(i0, i0 + k), i0 === 0, 88, prueba)));
+      /* La cabeza de una etapa no queda sola al final de la hoja. */
+      if (i0 + k < UNIDADES.length && k > 1 && UNIDADES[i0 + k - 1].t === 'etapa') k -= 1;
+      indices.push({ tipo: 'indice', desde: i0, hasta: i0 + k, primera: i0 === 0 });
+      if (k <= 0) break;
+      i0 += k;
+    } while (i0 < UNIDADES.length);
+
+    /* 3. Numeración final */
+    const paginas = [{ tipo: 'portada' }, ...indices, ...caps];
+    if (DOC.cierre) paginas.push({ tipo: 'cierre' });
+    const NUM = { etapa: {}, cap: {}, cierre: 0 };
+    paginas.forEach((p, i) => {
+      p.num = i + 1;
+      if (p.tipo === 'capitulo') {
+        p.segs.forEach(sg => { if (sg.desde === 0) NUM.cap[`${p.ie}.${sg.ib}`] = p.num; });
+        if (NUM.etapa[p.ie] == null) NUM.etapa[p.ie] = p.num;
+      }
+      if (p.tipo === 'etapaVacia') NUM.etapa[p.ie] = p.num;
+      if (p.tipo === 'cierre') NUM.cierre = p.num;
+    });
+    medidor.innerHTML = '';
+    pintandoEdicion = modo;
+    PAGINAS = paginas; NUMS = NUM;
+  }
+
+  /* ═══ 5 · DIBUJAR ══════════════════════════════════════════════════ */
+  function lateral() {
+    const h = [`<aside class="lateral" aria-label="Índice lateral">`];
+    h.push(`<a class="lateral__titulo" href="#hoja-${HOJA_INDICE}" data-ir="hoja-${HOJA_INDICE}" data-lat="indice">${tx('tituloIndice', DOC.tituloIndice)}</a>`);
+    DOC.etapas.forEach((e, ie) => {
+      const ne = NUMS.etapa[ie];
+      h.push(`<div class="lateral__etapa ${colorEtapa(ie)}">`);
+      h.push(`<a class="lateral__cabeza" href="#hoja-${ne}" data-ir="hoja-${ne}">${ie + 1} · ${tx('titulo', e.titulo, { ruta: ie })}</a>`);
+      h.push(`<div class="lateral__lista">`);
+      e.bloques.forEach((b, ib) => {
+        const n = NUMS.cap[`${ie}.${ib}`];
+        h.push(`<a href="#hoja-${n}" data-ir="hoja-${n}" data-lat="${ie}.${ib}"><b>${ie + 1}.${ib + 1}</b>${tx('titulo', b.titulo, { ruta: `${ie}.${ib}` })}</a>`);
+      });
+      h.push(`</div></div>`);
+    });
+    if (DOC.cierre) {
+      h.push(`<a class="lateral__cabeza lateral__cierre" href="#hoja-${NUMS.cierre}" data-ir="hoja-${NUMS.cierre}" data-lat="cierre">${tx('cierre.titulo', DOC.cierre.titulo)}</a>`);
+    }
+    h.push(`</aside>`);
+    return h.join('');
+  }
+
+  function dibujar() {
+    paginar();
+    pintandoEdicion = edicion;
+    const h = [`<div class="marco">`, PUBLICADO ? '' : lateral(), `<div class="hojas">`];   // publicado: sin índice lateral
+    PAGINAS.forEach(p => h.push(hoja(p)));
+    h.push(`</div></div>`);
+    lienzo.innerHTML = h.join('');
+    lienzo.classList.toggle('en-edicion', edicion);
+    marcarActivo();
+  }
+
+  /* ── Índice lateral: qué hoja se está leyendo ───────────────────
+     La última hoja cuyo borde superior ya pasó bajo la barra es la
+     actual. Su etapa se despliega en el índice lateral. */
+  function marcarActivo() {
+    const lat = lienzo.querySelector('.lateral');
+    if (!lat || getComputedStyle(lat).display === 'none') return;
+    let actual = null;
+    const marcas = lienzo.querySelectorAll('.hojas > .pagina:not([data-cap*="."]), .hojas > .pagina[data-cap$=".v"], .hojas [data-seg]');
+    for (const p of marcas) {
+      if (p.getBoundingClientRect().top < 160) actual = p; else break;
+    }
+    const cap = actual ? (actual.dataset.seg || actual.dataset.cap) : 'portada';
+    lat.querySelectorAll('[aria-current]').forEach(a => a.removeAttribute('aria-current'));
+    const enlace = lat.querySelector(`[data-lat="${cap}"]`);
+    if (enlace) enlace.setAttribute('aria-current', 'true');
+    const m = /^(\d+)\./.exec(cap);
+    const etapa = m ? +m[1] : -1;
+    lat.querySelectorAll('.lateral__etapa').forEach((el, i) => el.classList.toggle('abierta', i === etapa));
+  }
+  let pendiente = 0;
+  const alMover = () => {
+    if (pendiente) return;
+    pendiente = requestAnimationFrame(() => { pendiente = 0; marcarActivo(); });
+  };
+  window.addEventListener('scroll', alMover, { passive: true });
+  window.addEventListener('resize', alMover);
+
+  /* ═══ 6 · LEER Y ESCRIBIR ══════════════════════════════════════════ */
+  function enRuta(ruta) {
+    if (ruta == null) return null;
+    if (String(ruta).startsWith('c.')) return DOC.cierre.bifurcaciones[+String(ruta).slice(2)];
+    const p = String(ruta).split('.').map(Number);
+    let o = DOC.etapas[p[0]];
+    if (o && p.length > 1) o = o.bloques[p[1]];
+    if (o && p.length > 2) o = o.puntos[p[2]];
+    return o;
+  }
+
+  /* Se lee innerText y no innerHTML: lo que se pega desde Word trae
+     marcado que no queremos guardar. */
+  /* Un texto con negrita o código vuelve a su marca (**…**, `…`) para
+     no perder el formato al editarlo. */
+  function aMarcado(nodo) {
+    let t = '';
+    nodo.childNodes.forEach(n => {
+      if (n.nodeType === 3) { t += n.nodeValue; return; }
+      if (n.nodeType !== 1) return;
+      const dentro = aMarcado(n), etiqueta = n.nodeName;
+      if (etiqueta === 'B' || etiqueta === 'STRONG') t += dentro.trim() ? '**' + dentro + '**' : dentro;
+      else if (etiqueta === 'CODE') t += dentro.trim() ? '`' + dentro + '`' : dentro;
+      else if (etiqueta === 'A' && n.getAttribute('href')) t += '[' + dentro + '](' + n.getAttribute('href') + ')';
+      else if (etiqueta === 'BR') t += ' ';
+      else t += dentro;
+    });
+    return t;
+  }
+
+  function recoger(el) {
+    const bruto = el.dataset.rico ? aMarcado(el) : el.innerText;
+    const texto = bruto.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+    const campo = el.dataset.campo;
+    if (el.dataset.ruta == null) {
+      if (campo === 'cierre.titulo') DOC.cierre.titulo = texto;
+      else if (campo === 'cierre.nota') DOC.cierre.nota = texto;
+      else if (campo.startsWith('meta.')) (DOC.meta || [])[+campo.slice(5)] = texto;
+      else DOC[campo] = texto;
+      return;
+    }
+    const o = enRuta(el.dataset.ruta);
+    if (o) o[campo] = texto;
+  }
+
+  /* El mismo texto en todas partes mientras se escribe: un título que
+     se cambia en el índice cambia también en su hoja y en el lateral. */
+  const gemelos = el => {
+    const campo = el.dataset.campo, ruta = el.dataset.ruta;
+    const sel = ruta != null ? `[data-campo="${campo}"][data-ruta="${ruta}"]` : `[data-campo="${campo}"]:not([data-ruta])`;
+    return [...lienzo.querySelectorAll(sel)].filter(o => o !== el);
+  };
+  lienzo.addEventListener('input', ev => {
+    const el = ev.target.closest('[contenteditable="true"]');
+    if (!el || el.dataset.rico) return;
+    gemelos(el).forEach(o => { o.textContent = el.innerText; });
+  });
+  lienzo.addEventListener('focusout', ev => {
+    const el = ev.target.closest('[contenteditable="true"]');
+    if (el) { recoger(el); decir('Cambios sin guardar'); }
+  });
+  lienzo.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' && ev.target.isContentEditable) { ev.preventDefault(); ev.target.blur(); }
+    if (ev.key === 'Escape' && ev.target.isContentEditable) ev.target.blur();
+  });
+
+  /* ═══ 7 · NAVEGAR, AGREGAR, QUITAR Y MOVER ═════════════════════════ */
+  const ir = id => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  lienzo.addEventListener('click', ev => {
+    /* En modo edición, un clic sobre un texto es para escribirlo, no
+       para saltar a otra hoja. */
+    if (edicion && ev.target.closest('[contenteditable="true"]')) {
+      if (ev.target.closest('a')) ev.preventDefault();
+      return;
+    }
+    const salto = ev.target.closest('[data-ir]');
+    if (salto) { ev.preventDefault(); ir(salto.dataset.ir); return; }
+
+    const mv = ev.target.closest('[data-mover]');
+    const q  = ev.target.closest('[data-quitar]');
+    const a  = ev.target.closest('[data-sumar]');
+    const ins = ev.target.closest('[data-insertar]');
+    if (!mv && !q && !a && !ins) return;
+    const vivo = lienzo.querySelector('[contenteditable="true"]:focus');
+    if (vivo) recoger(vivo);
+
+    if (ins) {
+      const r = ins.dataset.insertar.split('.').map(Number);
+      anterior = JSON.stringify(DOC);
+      DOC.etapas[r[0]].bloques[r[1]].puntos.splice(r[2] + 1, 0, { t: '', n: '' });
+      dibujar();
+      $('#b-deshacer').hidden = false;
+      decir('Cambios sin guardar');
+      const foco = lienzo.querySelector(`.hojas [data-ruta="${r[0]}.${r[1]}.${r[2] + 1}"][data-campo="t"]`);
+      if (foco) foco.focus();
+      return;
+    }
+
+    /* ── Mover: intercambia con el vecino y deja la flecha bajo el
+       cursor, para poder seguir moviendo con clics seguidos. */
+    if (mv) {
+      if (mv.disabled) return;
+      const tipo = mv.dataset.mover, dir = +mv.dataset.dir;
+      const r = String(mv.dataset.ruta).split('.').map(Number);
+      let lista, i;
+      if (tipo === 'punto')  { lista = DOC.etapas[r[0]].bloques[r[1]].puntos; i = r[2]; }
+      if (tipo === 'bloque') { lista = DOC.etapas[r[0]].bloques; i = r[1]; }
+      if (tipo === 'etapa')  { lista = DOC.etapas; i = r[0]; }
+      if (tipo === 'bif')    { lista = DOC.cierre.bifurcaciones; i = r[0]; }
+      const j = i + dir;
+      if (!lista) return;
+      let nueva;
+      if (j >= 0 && j < lista.length) {
+        anterior = JSON.stringify(DOC);
+        [lista[i], lista[j]] = [lista[j], lista[i]];
+        nueva = tipo === 'punto' ? `${r[0]}.${r[1]}.${j}` : tipo === 'bloque' ? `${r[0]}.${j}` : String(j);
+      } else if (tipo === 'punto') {
+        /* Pasa al capítulo vecino: al final si sube, al inicio si baja. */
+        const v = capVecino(r[0], r[1], dir);
+        if (!v) return;
+        anterior = JSON.stringify(DOC);
+        const [p] = lista.splice(i, 1);
+        const destino = DOC.etapas[v[0]].bloques[v[1]].puntos;
+        if (dir < 0) destino.push(p); else destino.unshift(p);
+        nueva = `${v[0]}.${v[1]}.${dir < 0 ? destino.length - 1 : 0}`;
+      } else if (tipo === 'bloque') {
+        /* Pasa a la etapa vecina: al final si sube, al inicio si baja. */
+        const e2 = r[0] + dir;
+        if (e2 < 0 || e2 >= DOC.etapas.length) return;
+        anterior = JSON.stringify(DOC);
+        const [b] = lista.splice(i, 1);
+        const destino = DOC.etapas[e2].bloques;
+        if (dir < 0) destino.push(b); else destino.unshift(b);
+        nueva = `${e2}.${dir < 0 ? destino.length - 1 : 0}`;
+      } else return;
+      const ancla = mv.getBoundingClientRect().top;
+      dibujar();
+      const otra = lienzo.querySelector(`.hojas [data-mover="${tipo}"][data-ruta="${nueva}"][data-dir="${dir}"]`);
+      if (otra) { window.scrollBy(0, otra.getBoundingClientRect().top - ancla); otra.focus({ preventScroll: true }); }
+      $('#b-deshacer').hidden = false;
+      decir('Cambios sin guardar');
+      return;
+    }
+
+    anterior = JSON.stringify(DOC);
+    if (q) {
+      const r = String(q.dataset.ruta).split('.').map(Number);
+      if (q.dataset.quitar === 'etapa')  DOC.etapas.splice(r[0], 1);
+      if (q.dataset.quitar === 'bloque') DOC.etapas[r[0]].bloques.splice(r[1], 1);
+      if (q.dataset.quitar === 'punto')  DOC.etapas[r[0]].bloques[r[1]].puntos.splice(r[2], 1);
+      if (q.dataset.quitar === 'bif')    DOC.cierre.bifurcaciones.splice(r[0], 1);
+    }
+    let r = [];
+    if (a) {
+      r = String(a.dataset.ruta || '').split('.').map(Number);
+      if (a.dataset.sumar === 'etapa')  DOC.etapas.push({ titulo: 'Etapa nueva', nota: '', bloques: [] });
+      if (a.dataset.sumar === 'bloque') DOC.etapas[r[0]].bloques.push({ titulo: 'Capítulo nuevo', puntos: [{ t: '', n: '' }] });
+      if (a.dataset.sumar === 'punto')  DOC.etapas[r[0]].bloques[r[1]].puntos.push({ t: '', n: '' });
+      if (a.dataset.sumar === 'bif')    DOC.cierre.bifurcaciones.push({ titulo: 'Decisión nueva', texto: '' });
+    }
+    dibujar();
+    $('#b-deshacer').hidden = !edicion;
+    decir('Cambios sin guardar');
+    if (a) {
+      let foco = null;
+      if (a.dataset.sumar === 'punto') {
+        const ult = DOC.etapas[r[0]].bloques[r[1]].puntos.length - 1;
+        foco = lienzo.querySelector(`.hojas [data-ruta="${r[0]}.${r[1]}.${ult}"][data-campo="t"]`);
+      }
+      if (a.dataset.sumar === 'bloque') foco = lienzo.querySelector(`.hojas h3 [data-ruta="${r[0]}.${DOC.etapas[r[0]].bloques.length - 1}"][data-campo="titulo"]`);
+      if (a.dataset.sumar === 'etapa')  foco = lienzo.querySelector(`.hojas .etapa__banda [data-ruta="${DOC.etapas.length - 1}"][data-campo="titulo"]`);
+      if (a.dataset.sumar === 'bif')    foco = lienzo.querySelector(`.hojas .bif [data-ruta="c.${DOC.cierre.bifurcaciones.length - 1}"][data-campo="titulo"]`);
+      if (foco) foco.focus();
+    }
+  });
+
+  /* ═══ 7b · BUSCAR Y REEMPLAZAR ════════════════════════════════════
+     Cambia un texto en todo el documento de una vez: títulos, puntos,
+     notas, rótulos, índice y pie. Distingue mayúsculas, para no tocar
+     un nombre propio por error. «Deshacer» revierte el reemplazo. */
+  function campos(o, fn) {
+    if (Array.isArray(o)) { o.forEach((v, i) => typeof v === 'string' ? fn(o, i) : campos(v, fn)); return; }
+    if (o && typeof o === 'object') {
+      for (const k in o) {
+        if (k === 'logo') continue;
+        if (typeof o[k] === 'string') fn(o, k); else campos(o[k], fn);
+      }
+    }
+  }
+  const contar = buscar => {
+    if (!buscar) return 0;
+    let n = 0;
+    campos(DOC, (o, k) => { n += o[k].split(buscar).length - 1; });
+    return n;
+  };
+
+  function armarReemplazo() {
+    if (PUBLICADO || $('#b-reemplazar')) return;   // publicado: sin reemplazo; guardado: ya lo trae
+    const barra = $('.barra');
+    const b = document.createElement('button');
+    b.type = 'button'; b.id = 'b-reemplazar'; b.hidden = true;
+    b.setAttribute('aria-expanded', 'false'); b.textContent = 'Reemplazar';
+    barra.insertBefore(b, $('#b-guardar'));
+    const panel = document.createElement('div');
+    panel.id = 'reemplazo'; panel.className = 'reemplazo'; panel.hidden = true;
+    panel.innerHTML = `<label>Buscar <input type="text" id="r-buscar" autocomplete="off"></label>`
+      + `<label>Reemplazar por <input type="text" id="r-por" autocomplete="off"></label>`
+      + `<span id="r-cuenta" class="reemplazo__cuenta"></span>`
+      + `<button type="button" id="r-todo">Reemplazar todo</button>`;
+    barra.appendChild(panel);
+  }
+  armarReemplazo();
+  const actualizarCuenta = () => {
+    const n = contar($('#r-buscar').value);
+    $('#r-cuenta').textContent = $('#r-buscar').value ? (n === 1 ? '1 coincidencia' : n + ' coincidencias') : '';
+  };
+  if (!PUBLICADO) {
+  $('#b-reemplazar').addEventListener('click', () => {
+    const abrir = $('#reemplazo').hidden;
+    $('#reemplazo').hidden = !abrir;
+    $('#b-reemplazar').setAttribute('aria-expanded', String(abrir));
+    if (abrir) { actualizarCuenta(); $('#r-buscar').focus(); }
+  });
+  $('#r-buscar').addEventListener('input', actualizarCuenta);
+  $('#r-todo').addEventListener('click', () => {
+    const buscar = $('#r-buscar').value, por = $('#r-por').value;
+    const n = contar(buscar);
+    if (!n) { decir('No hay coincidencias'); return; }
+    const vivo = lienzo.querySelector('[contenteditable="true"]:focus');
+    if (vivo) recoger(vivo);
+    anterior = JSON.stringify(DOC);
+    campos(DOC, (o, k) => { o[k] = o[k].split(buscar).join(por); });
+    dibujar();
+    $('#b-deshacer').hidden = false;
+    actualizarCuenta();
+    decir(n === 1 ? 'Se reemplazó 1 coincidencia' : 'Se reemplazaron ' + n + ' coincidencias');
+  });
+  }
+
+  /* ═══ 8 · LA BARRA ═════════════════════════════════════════════════ */
+  if ($('#b-indice')) $('#b-indice').addEventListener('click', () => ir('hoja-' + HOJA_INDICE));
+
+  function cambiarModo(enEdicion) {
+    const vivo = lienzo.querySelector('[contenteditable="true"]:focus');
+    if (vivo) recoger(vivo);
+    edicion = enEdicion;
+    $('#b-editar').setAttribute('aria-pressed', String(edicion));
+    $('#b-editar').textContent = edicion ? 'Terminar edición' : 'Editar';
+    $('#b-deshacer').hidden = !edicion || !anterior;
+    $('#b-reemplazar').hidden = !edicion;
+    if (!edicion) { $('#reemplazo').hidden = true; $('#b-reemplazar').setAttribute('aria-expanded', 'false'); }
+    dibujar();
+  }
+  if (!PUBLICADO) {
+  $('#b-editar').addEventListener('click', () => {
+    cambiarModo(!edicion);
+    decir(edicion ? 'Modo edición' : '');
+  });
+
+  $('#b-deshacer').addEventListener('click', () => {
+    if (!anterior) return;
+    DOC = JSON.parse(anterior);
+    anterior = null;
+    $('#b-deshacer').hidden = true;
+    dibujar();
+    decir('Se deshizo el último cambio');
+  });
+  }
+
+  /* Al imprimir desde el navegador, las hojas se rearman a su medida
+     exacta: si estaba en modo edición, se termina antes. */
+  window.addEventListener('beforeprint', () => { if (edicion) cambiarModo(false); });
+
+  /* ═══ 9 · GUARDAR EN SU COMPUTADOR ═════════════════════════════════
+     El archivo que baja es este mismo documento con los datos dentro:
+     se abre con doble clic, sin internet y sin ninguna cuenta. Por eso
+     la herramienta de PDF va incrustada y no se pide a un servidor. */
+  /* Se arma pieza por pieza y en orden fijo, nunca barriendo el
+     documento: alrededor de esta página hay código del visor que no es
+     nuestro, y un querySelectorAll('script') se lo llevaría dentro del
+     archivo de la persona. Eso además lo dejaría creyendo que sigue
+     dentro del visor, y entonces no descargaría nada en su computador. */
+  function documentoCompleto() {
+    const reset = ':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);'
+      + 'padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;'
+      + 'background:#fafaf9}img{max-width:100%}[hidden]{display:none!important}';
+    const pieza = id => { const e = document.getElementById(id); return e ? e.outerHTML : ''; };
+    const titulo = document.title || 'Estándar de cotizador ecommerce';
+
+    const cuerpo =
+        '<title>' + titulo + '<\/title>'
+      + pieza('estilo')
+      + '<div class="hoja">' + $('.barra').outerHTML.replace(/(id="aviso"[^>]*>)[^<]*/, '$1')
+          .replace(/<button type="button" id="b-reemplazar"[^>]*>/, '<button type="button" id="b-reemplazar" hidden="" aria-expanded="false">')
+          .replace(/<div id="reemplazo" class="reemplazo"[^>]*>/, '<div id="reemplazo" class="reemplazo" hidden="">')
+      + '<div id="lienzo"></div></div>'
+      + '<script type="application/json" id="datos-iniciales">'
+      +   JSON.stringify(DOC).replace(/</g, '\\u003c') + '<\/script>'
+      + pieza('motor-pdf')
+      + pieza('logica');
+
+    return '<!doctype html><html lang="es"><head><meta charset=utf8>'
+         + '<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">'
+         + '<style>' + reset + '</style></head><body>' + cuerpo + '</body></html>';
+  }
+
+  /* Dentro del visor se pide la descarga al anfitrión; en un computador
+     cualquiera basta un enlace. Se intenta lo primero y se cae a lo
+     segundo, así el mismo botón sirve en los dos lados. */
+  async function bajar(nombre, datos, tipo) {
+    if (enVisor) {
+      try {
+        const api = await window.claude.use('downloads');
+        if (api) { await api.save({ filename: nombre, data: datos }); return true; }
+      } catch (e) { /* se intenta el enlace */ }
+    }
+    const url = URL.createObjectURL(new Blob([datos], { type: tipo }));
+    const a = document.createElement('a');
+    a.href = url; a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return true;
+  }
+
+  /* ── Guardar como ──────────────────────────────────────────────
+     Se abre la ventana de guardado del propio sistema, la de siempre:
+     ella elige carpeta y nombre. Donde el navegador no la ofrezca, cae
+     en una descarga normal con un nombre que lleva fecha y hora, así
+     dos guardados nunca se pisan. */
+  const sugerido = () => {
+    const f = new Date();
+    const dd = n => String(n).padStart(2, '0');
+    return `Estandar-cotizador-${f.getFullYear()}-${dd(f.getMonth() + 1)}-${dd(f.getDate())}`
+         + `-${dd(f.getHours())}${dd(f.getMinutes())}`;
+  };
+
+  async function guardarComo(nombre, datos, tipo, ext) {
+    if (window.showSaveFilePicker) {
+      try {
+        const f = await window.showSaveFilePicker({
+          suggestedName: nombre + ext,
+          types: [{ description: ext === '.pdf' ? 'Documento PDF' : 'Página web',
+                    accept: { [tipo]: [ext] } }]
+        });
+        const w = await f.createWritable();
+        await w.write(datos); await w.close();
+        return f.name;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return null;   // canceló
+      }
+    }
+    await bajar(nombre + ext, datos, tipo);
+    return nombre + ext;
+  }
+
+  let ocupado = false;
+  if (!PUBLICADO) $('#b-guardar').addEventListener('click', async () => {
+    if (ocupado) return;
+    const vivo = lienzo.querySelector('[contenteditable="true"]:focus');
+    if (vivo) recoger(vivo);
+    ocupado = true; decir('Guardando…');
+    try {
+      const n = await guardarComo(sugerido(),
+        new TextEncoder().encode(documentoCompleto()), 'text/html', '.html');
+      decir(n ? 'Guardado como ' + n : '');
+    } catch (e) { decir('No se pudo guardar', true); }
+    finally { ocupado = false; }
+  });
+
+  /* ═══ 10 · PDF ═════════════════════════════════════════════════════
+     Texto de verdad, no una foto de la pantalla: pesa poco, se puede
+     buscar y copiar. Sigue exactamente las mismas hojas que la
+     pantalla: cada capítulo en su página, el índice con el número de
+     cada una y enlaces que saltan a ella, y «Volver al índice» al pie. */
+  function armarPDF() {
+    dibujar();                       // paginación al día antes de armar
+    const { jsPDF } = window.jspdf;
+    const d = new jsPDF({ unit: 'mm', format: 'a4' });
+    const AN = 210;                  // ancho de la hoja A4, en milímetros
+
+    /* La tipografía del PDF solo escribe Latin-1: una flecha o una
+       viñeta pegada desde Word saldría como un garabato. Se cambia por
+       su equivalente, y lo que no tenga equivalente se descarta. */
+    const CAMBIOS = {
+      '→': '->', '←': '<-', '↔': '<->', '↳': '>', '⇒': '=>', '↑': '', '↓': '',
+      '•': '·', '●': '·', '▪': '·', '–': '-', '—': '-', '―': '-', '‑': '-',
+      '“': '"', '”': '"', '‘': "'", '’': "'", '…': '...',
+      '≤': '<=', '≥': '>=', '≠': '!=', '✓': 'OK', '✔': 'OK', '✕': 'x', '✗': 'x'
+    };
+    const latin = t => t.replace(/[^\u0000-\u00ff]/g, c => CAMBIOS[c] || '');
+    /* Color de pantalla a RGB; un color transparente no se dibuja. */
+    const rgb = c => {
+      const m = /rgba?\(([^)]+)\)/.exec(c || '');
+      if (!m) return null;
+      const v = m[1].split(',').map(x => parseFloat(x));
+      return v.length > 3 && v[3] === 0 ? null : v.slice(0, 3);
+    };
+    /* En Arial y Helvetica la línea base queda al 81 % del alto de la
+       letra (subida 0,905 sobre 1,117 de subida más bajada). */
+    const BASE = 0.905 / 1.117;
+    const enlaces = [];              // se agregan al final, con todas las hojas creadas
+
+    /* Cada hoja se arma en la hoja invisible de medición, con las medidas
+       exactas del papel, y se copia al PDF en el mismo lugar: fondos,
+       líneas, vistos buenos, palabras y enlaces. Así el PDF es igual a
+       la pantalla, con los mismos cortes y los mismos números de página. */
+    const pintarHoja = (el, numero) => {
+      const caja = el.getBoundingClientRect();
+      const k = AN / caja.width;                     // milímetros por píxel
+      const X = v => (v - caja.left) * k, Y = v => (v - caja.top) * k;
+      const PT = px => px * k * 72 / 25.4;           // tamaño de letra: de píxel a punto
+
+      /* 1 · Fondos, bordes, imágenes y vistos buenos, en el orden del documento. */
+      [el, ...el.querySelectorAll('*')].forEach(n => {
+        const cs = getComputedStyle(n);
+        if (cs.display === 'none') return;
+        const r = n.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        const fondo = rgb(cs.backgroundColor);
+        if (fondo) {
+          d.setFillColor(...fondo);
+          const radio = (parseFloat(cs.borderTopLeftRadius) || 0) * k;
+          if (radio > 0) d.roundedRect(X(r.left), Y(r.top), r.width * k, r.height * k, radio, radio, 'F');
+          else d.rect(X(r.left), Y(r.top), r.width * k, r.height * k, 'F');
+        }
+        /* Cada borde se dibuja como una franja de su grosor. */
+        [['Top', 0], ['Right', 1], ['Bottom', 2], ['Left', 3]].forEach(([lado, i]) => {
+          const g = parseFloat(cs['border' + lado + 'Width']) || 0;
+          const color = rgb(cs['border' + lado + 'Color']);
+          if (!g || !color || cs['border' + lado + 'Style'] === 'none') return;
+          d.setFillColor(...color);
+          if (i === 0) d.rect(X(r.left), Y(r.top), r.width * k, g * k, 'F');
+          if (i === 2) d.rect(X(r.left), Y(r.bottom - g), r.width * k, g * k, 'F');
+          if (i === 3) d.rect(X(r.left), Y(r.top), g * k, r.height * k, 'F');
+          if (i === 1) d.rect(X(r.right - g), Y(r.top), g * k, r.height * k, 'F');
+        });
+        if (n.tagName === 'IMG' && n.src) {
+          try {
+            const formato = /^data:image\/jpe?g/.test(n.src) ? 'JPEG' : 'PNG';
+            d.addImage(n.src, formato, X(r.left), Y(r.top), r.width * k, r.height * k, 'img-' + n.src.length, 'FAST');
+          } catch (e) {}
+        }
+        /* Visto bueno de cada punto: dos bordes girados en 45 grados,
+           como en pantalla. Se calcula su forma y se traza. */
+        if (n.tagName === 'LI') {
+          const v = getComputedStyle(n, '::before');
+          if (v.display !== 'none' && v.content !== 'none') {
+            const w = parseFloat(v.width), h = parseFloat(v.height);
+            const g = parseFloat(v.borderRightWidth) || 0;
+            const izq = r.left + (parseFloat(cs.paddingLeft) || 0) + (parseFloat(v.marginLeft) || 0);
+            const arr = r.top + (parseFloat(cs.paddingTop) || 0) + (parseFloat(v.marginTop) || 0);
+            const cx = izq + (w + g) / 2, cy = arr + (h + g) / 2, c = Math.SQRT1_2;
+            const gira = (x, y) => [cx + (x - cx) * c - (y - cy) * c, cy + (x - cx) * c + (y - cy) * c];
+            const A = gira(izq, arr + h + g / 2), B = gira(izq + w + g / 2, arr + h + g / 2), C = gira(izq + w + g / 2, arr);
+            d.setDrawColor(...(rgb(v.borderRightColor) || [33, 103, 174]));
+            d.setLineWidth(g * k); d.setLineCap('butt'); d.setLineJoin('miter');
+            d.lines([[(B[0] - A[0]) * k, (B[1] - A[1]) * k], [(C[0] - B[0]) * k, (C[1] - B[1]) * k]], X(A[0]), Y(A[1]), [1, 1], 'S', false);
+          }
+        }
+      });
+
+      /* 2 · Palabras: cada una en su lugar exacto, con su letra y color.
+         Así se conservan los cortes de línea, la justificación y las
+         negritas. Cada palabra lleva el espacio que la sigue en el texto,
+         para que el PDF se pueda buscar y copiar sin palabras pegadas. */
+      const palabras = [];
+      const recorre = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const rango = document.createRange();
+      let t;
+      while ((t = recorre.nextNode())) {
+        const txt = t.nodeValue;
+        const cs = getComputedStyle(t.parentElement);
+        if (cs.display === 'none') continue;
+        const estilo = {
+          fs: parseFloat(cs.fontSize),
+          negrita: parseInt(cs.fontWeight, 10) >= 600 || cs.fontWeight === 'bold',
+          mono: /Consolas|Courier|monospace/i.test(cs.fontFamily),
+          mayus: cs.textTransform === 'uppercase',
+          subraya: !!t.parentElement.closest('.enlace'),
+          color: rgb(cs.color) || [0, 0, 0]
+        };
+        const re = /\s+|\S+/g;
+        let m;
+        while ((m = re.exec(txt))) {
+          if (/^\s/.test(m[0])) { if (palabras.length) palabras[palabras.length - 1].espacio = true; continue; }
+          rango.setStart(t, m.index); rango.setEnd(t, m.index + m[0].length);
+          const rs = [...rango.getClientRects()].filter(q => q.width > 0);
+          if (!rs.length) continue;
+          if (rs.length === 1) { palabras.push({ p: m[0], q: rs[0], e: estilo }); continue; }
+          /* Palabra larga cortada entre dos líneas: se dibuja por tramos. */
+          let tramo = '', ref = null;
+          for (let c = 0; c < m[0].length; c++) {
+            rango.setStart(t, m.index + c); rango.setEnd(t, m.index + c + 1);
+            const q = rango.getClientRects()[0];
+            if (!q) continue;
+            if (ref && Math.abs(q.top - ref.top) > 2) { palabras.push({ p: tramo, q: ref, e: estilo }); tramo = ''; ref = null; }
+            if (!ref) ref = q;
+            tramo += m[0][c];
+          }
+          if (tramo) palabras.push({ p: tramo, q: ref, e: estilo });
+        }
+      }
+      palabras.forEach(({ p, q, e, espacio }) => {
+        const texto = latin(e.mayus ? p.toUpperCase() : p);
+        if (!texto) return;
+        d.setFont(e.mono ? 'courier' : 'helvetica', e.negrita ? 'bold' : 'normal');
+        d.setFontSize(PT(e.fs)); d.setTextColor(...e.color);
+        const base = q.top + q.height * BASE;
+        d.text(texto + (espacio ? ' ' : ''), X(q.left), Y(base));
+        if (e.subraya) {
+          d.setDrawColor(...e.color); d.setLineWidth(e.fs * k / 16);
+          d.line(X(q.left), Y(base + e.fs * 0.12), X(q.right), Y(base + e.fs * 0.12));
+        }
+      });
+
+      /* 3 · Enlaces: índice, «Volver al índice» y direcciones externas. */
+      el.querySelectorAll('a[href]').forEach(a => {
+        const destino = a.getAttribute('href');
+        const hoja = /^#hoja-(\d+)$/.exec(destino);
+        if (!hoja && !/^(https?:|mailto:)/.test(destino)) return;
+        [...a.getClientRects()].filter(q => q.width > 0).forEach(q => enlaces.push({
+          numero, x: X(q.left), y: Y(q.top), w: q.width * k, h: q.height * k,
+          op: hoja ? { pageNumber: +hoja[1] } : { url: destino }
+        }));
+      });
+    };
+
+    const modo = pintandoEdicion;
+    pintandoEdicion = false;         // se dibuja como se imprime, sin controles de edición
+    try {
+      PAGINAS.forEach((pg, i) => {
+        if (i > 0) d.addPage();
+        medidor.innerHTML = hoja(pg);
+        pintarHoja(medidor.querySelector('.pagina'), i + 1);
+      });
+    } finally {
+      medidor.innerHTML = '';
+      pintandoEdicion = modo;
+    }
+    enlaces.forEach(e => { d.setPage(e.numero); d.link(e.x, e.y, e.w, e.h, e.op); });
+    return d;
+  }
+
+  if ($('#b-pdf')) $('#b-pdf').addEventListener('click', async () => {
+    if (ocupado) return;
+    const vivo = lienzo.querySelector('[contenteditable="true"]:focus');
+    if (vivo) recoger(vivo);
+    ocupado = true; decir('Armando el PDF…');
+    try {
+      const bytes = armarPDF().output('arraybuffer');
+      const n = await guardarComo(sugerido(), new Uint8Array(bytes), 'application/pdf', '.pdf');
+      decir(n ? 'PDF guardado como ' + n : '');
+    } catch (e) { decir('No se pudo armar el PDF', true); }
+    finally { ocupado = false; }
+  });
+
+  /* ═══ 11 · ARRANQUE ════════════════════════════════════════════════ */
+  dibujar();
+  decir('');
+  if (!PUBLICADO) {
+    $('#b-guardar').hidden = false;
+    /* Siempre abre en lectura, aunque se haya guardado en modo edición. */
+    $('#b-editar').textContent = 'Editar';
+    $('#b-editar').setAttribute('aria-pressed', 'false');
+  }
+  if (window.jspdf && $('#b-pdf')) $('#b-pdf').hidden = false;
+
+  if (PUBLICADO) {
+    document.documentElement.classList.add('publicado');
+    /* Las hojas se agrandan hasta el ancho de la barra superior: la hoja
+       mide 794 px y el contenedor llega a 1240 px (máximo 160 %). */
+    const ajustar = () => {
+      const ancho = $('.hojas') ? $('.hojas').clientWidth : window.innerWidth - 40;
+      const z = window.innerWidth > 880 ? Math.min(1.6, Math.max(1, ancho / 794)) : 1;
+      document.documentElement.style.setProperty('--zoom-hojas', z.toFixed(3));
+    };
+    ajustar();
+    window.addEventListener('resize', ajustar);
+    /* Botón «Volver arriba»: aparece al bajar y lleva al inicio del documento. */
+    const arriba = document.createElement('button');
+    arriba.type = 'button'; arriba.className = 'arriba'; arriba.hidden = true;
+    arriba.textContent = '↑ Volver arriba';
+    arriba.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.body.appendChild(arriba);
+    const mostrar = () => { arriba.hidden = window.scrollY < 600; };
+    window.addEventListener('scroll', mostrar, { passive: true });
+    mostrar();
+  }
+})();
+</script></body></html>
